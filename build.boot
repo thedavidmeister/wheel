@@ -3,8 +3,10 @@
 
 (set-env! :source-paths   #{"src"}
           :dependencies   '[[org.clojure/clojure "RELEASE"]
+                            [org.clojure/clojurescript "RELEASE"]
                             [adzerk/boot-test "RELEASE" :scope "test"]
-                            [adzerk/bootlaces "RELEASE" :scope "test"]])
+                            [adzerk/bootlaces "RELEASE" :scope "test"]
+                            [crisptrutski/boot-cljs-test "0.2.2-SNAPSHOT" :scope "test"]])
 
 (task-options!
  pom {:project     project
@@ -18,7 +20,25 @@
   []
   (comp (pom) (jar) (install)))
 
-(require '[adzerk.boot-test :refer [test]]
+(require '[crisptrutski.boot-cljs-test :refer [test-cljs]]
          '[adzerk.bootlaces :refer :all])
 
 (bootlaces! version)
+
+(def cljs-compiler-options {})
+
+(deftask tests-cljs
+  "Run all the CLJS tests"
+  [w watch? bool "Watches the filesystem and reruns tests when changes are made."]
+  ; Run the JS tests
+  (comp
+    (if watch?
+        (comp
+          (watch)
+          (speak :theme "woodblock"))
+        identity)
+    (test-cljs :exit? (not watch?)
+               ; :js-env :chrome
+               :cljs-opts (-> cljs-compiler-options
+                              (merge {:load-tests true}))
+               :namespaces [#".*"])))

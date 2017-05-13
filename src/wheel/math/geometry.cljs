@@ -1,4 +1,6 @@
-(ns wheel.math.geometry)
+(ns wheel.math.geometry
+ (:require
+  [cljs.test :refer-macros [deftest is]]))
 
 (defn polar->cartesian
  "Given a radius (unitless) and rotation in radians, returns (unitless) [x y] co-ordinates"
@@ -12,6 +14,10 @@
  (/ (* degrees (.-PI js/Math)) 180))
 
 (defn radians->degrees
- "Given a rotation in radians, returns the same rotation in degrees" 
+ "Given a rotation in radians, returns the same rotation in degrees"
  [radians]
  (/ (* radians 180) (.-PI js/Math)))
+
+; TESTS.
+
+(deftest ??polar->cartesian)
