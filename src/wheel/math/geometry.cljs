@@ -23,14 +23,14 @@
 ; TESTS.
 
 (deftest ??polar->cartesian
- ; First, an oracle.
+ ; oracle.
  (let [angle (rand (* 2 (.-PI js/Math)))
        radius (rand 10)]
   (is (= [(* radius (.cos js/Math angle))
           (* radius (.sin js/Math angle))]
          (polar->cartesian radius angle))))
 
- ; Second a bunch of hand-picked examples.
+ ; examples.
  ; Apparently this has some serious rounding issues so we "only" test the values
  ; to within a tolerance of 10^-15
  (let [pi (.-PI js/Math)
@@ -54,3 +54,35 @@
    (let [[x y] (apply polar->cartesian i)]
     (is (within-tolerance? (- xo x)) (str "xo and x not within tolerance. xo:" xo " x:" x " i:" i))
     (is (within-tolerance? (- yo y)))))))
+
+(deftest ??degrees->radians
+ ; oracle
+ (let [degrees (rand 360)]
+  (is (== (degrees->radians degrees)
+          (/ (* degrees (.-PI js/Math))
+             180))))
+
+ ; examples
+ (let [pi (.-PI js/Math)]
+  (are [i o] (== o (degrees->radians i))
+   0 0
+   45 (/ pi 4)
+   90 (/ pi 2)
+   180 pi
+   360 (* pi 2))))
+
+(deftest ??radians->degrees
+ ; oracle
+ (let [radians (rand (* 2 (.-PI js/Math)))]
+  (is (== (radians->degrees radians))
+      (/ (* radians 180)
+         (.-PI js/Math))))
+
+ ; examples
+ (let [pi (.-PI js/Math)]
+  (are [i o] (== o (radians->degrees i))
+   0 0
+   (/ pi 4) 45
+   (/ pi 2) 90
+   pi 180
+   (* 2 pi) 360)))
