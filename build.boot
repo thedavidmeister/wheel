@@ -6,7 +6,8 @@
                             [org.clojure/clojurescript "RELEASE"]
                             [adzerk/boot-test "RELEASE" :scope "test"]
                             [adzerk/bootlaces "RELEASE" :scope "test"]
-                            [crisptrutski/boot-cljs-test "0.2.2-SNAPSHOT" :scope "test"]])
+                            [crisptrutski/boot-cljs-test "0.2.2-SNAPSHOT" :scope "test"]
+                            [hoplon "RELEASE"]])
 
 (task-options!
  pom {:project     project
