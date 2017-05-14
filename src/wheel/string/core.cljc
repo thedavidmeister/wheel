@@ -1,4 +1,4 @@
-(ns wheel.string
+(ns wheel.string.core
  (:require
   clojure.string
   #?(:cljs [cljs.test :refer-macros [deftest is are]]

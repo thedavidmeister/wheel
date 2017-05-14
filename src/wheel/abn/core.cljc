@@ -1,15 +1,15 @@
 (ns wheel.abn.core
  (:require
-  wheel.string
+  wheel.string.core
   wheel.abn.config
   #?(:cljs [cljs.test :refer-macros [deftest is are]]
      :clj [clojure.test :refer [deftest is are]])))
 
 (defn normalize
  [n]
- {:post [(= 11 (count (wheel.string/no-space %)))
+ {:post [(= 11 (count (wheel.string.core/no-space %)))
          (= 14 (count %))]}
- (let [s (wheel.string/no-space (str n))]
+ (let [s (wheel.string.core/no-space (str n))]
   (assert (= 11 (count s)))
   (let [[head rest] (split-at 2 s)]
    (->> (into [head] (partition 3 rest))
@@ -18,7 +18,7 @@
 
 (defn abr-search-url
  [n]
- (let [s (wheel.string/no-space (str n))]
+ (let [s (wheel.string.core/no-space (str n))]
   (str wheel.abn.config/search-base-url s)))
 
 ; TESTS.
