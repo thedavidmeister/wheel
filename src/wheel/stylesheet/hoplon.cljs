@@ -1,4 +1,4 @@
-(ns wheel.hoplon.stylesheet.dom
+(ns wheel.stylesheet.hoplon
  (:require
   [hoplon.core :as h]
   [cljs.test :refer-macros [deftest is]]))
