@@ -2,7 +2,7 @@
 (def version "0.2.0-SNAPSHOT")
 
 (set-env! :source-paths   #{"src"}
-          :dependencies   '[[org.clojure/clojure "1.9.0-alpha16"]
+          :dependencies   '[[org.clojure/clojure "1.9.0-alpha15"]
                             [org.clojure/clojurescript "1.9.542"]
                             [adzerk/boot-test "RELEASE" :scope "test"]
                             [adzerk/bootlaces "RELEASE" :scope "test"]

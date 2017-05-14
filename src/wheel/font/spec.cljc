@@ -2,7 +2,7 @@
  (:require
   wheel.font.config
   #?(:cljs [cljs.spec.alpha :as spec]
-     :clj [clojure.spec.alpha :as spec])
+     :clj [clojure.spec :as spec])
   #?(:cljs [cljs.test :refer-macros [deftest is are]]
      :clj [clojure.test :refer [deftest is are]])))
 
