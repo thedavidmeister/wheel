@@ -3,11 +3,11 @@
 
 (set-env! :source-paths   #{"src"}
           :dependencies   '[[org.clojure/clojure "RELEASE"]
-                            [org.clojure/clojurescript "RELEASE"]
+                            [org.clojure/clojurescript "1.9.542"]
                             [adzerk/boot-test "RELEASE" :scope "test"]
                             [adzerk/bootlaces "RELEASE" :scope "test"]
                             [crisptrutski/boot-cljs-test "0.2.2-SNAPSHOT" :scope "test"]
-                            [hoplon "RELEASE"]])
+                            [hoplon "7.0.1"]])
 
 (task-options!
  pom {:project     project
