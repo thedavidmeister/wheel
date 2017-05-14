@@ -14,9 +14,11 @@
 
 (defn font->uri-str
  "Given a font hash map, returns a string suitable in a Google Fonts URI"
- [{:keys [name variants]}]
+ [font]
  {:pre [(or (nil? variants) (coll? variants))]}
- (let [name-uri (clojure.string/replace name " " "+")
+ (let [name (::name font)
+       variants (::variants font)
+       name-uri (clojure.string/replace name " " "+")
        variants-uri (when (seq variants)
                      (str ":" (clojure.string/join "," variants)))]
   (str name-uri variants-uri)))
@@ -37,21 +39,22 @@
  ([k] (get wheel.hoplon.google-fonts.config/well-known-fallbacks k k)))
 
 (defn font->css-str
- [{:keys [name fallback]}]
- (let [fallback (or fallback (get-fallback))]
+ [font]
+ (let [name (::name font)
+       fallback (or (::fallback font) (get-fallback))]
   (str "font-family: \"" name "\", " fallback ";")))
 
 ; TESTS
 
 (def examples
  (partition 2
-  [{:name ""} ""
-   {:name "foo"} "foo"
-   {:name "foo bar"} "foo+bar"
-   {:name "foo" :variants []} "foo"
-   {:name "foo" :variants ["1"]} "foo:1"
-   {:name "foo" :variants ["1" "2"]} "foo:1,2"
-   {:name "foo bar" :variants ["1" "2"]} "foo+bar:1,2"]))
+  [{::name ""} ""
+   {::name "foo"} "foo"
+   {::name "foo bar"} "foo+bar"
+   {::name "foo" ::variants []} "foo"
+   {::name "foo" ::variants ["1"]} "foo:1"
+   {::name "foo" ::variants ["1" "2"]} "foo:1,2"
+   {::name "foo bar" ::variants ["1" "2"]} "foo+bar:1,2"]))
 
 (deftest ??font->uri-str
  ; examples
@@ -89,13 +92,13 @@
 (deftest ??font->css-str
  ; oracle
  (let [[i _] (rand-nth examples)
-       n (:name i)]
+       n (::name i)]
   (is (= (str "font-family: \"" n "\", " (get-fallback) ";")
          (font->css-str i))))
 
  (let [[i _] (rand-nth examples)
        f (str (random-uuid))
-       i (merge i {:fallback f})
-       n (:name i)]
+       i (merge i {::fallback f})
+       n (::name i)]
   (is (= (str "font-family: \"" n "\", " f ";")
          (font->css-str i)))))
