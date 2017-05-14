@@ -1,7 +1,10 @@
 (ns wheel.dom.events
  (:require
   wheel.dom.manipulation
-  [hoplon.core :as h]))
+  wheel.hoplon.on
+  [hoplon.core :as h]
+  [javelin.core :as j]
+  [cljs.test :refer-macros [deftest is]]))
 
 (defn ensure-original-object!
  [e]
@@ -40,3 +43,15 @@
  ([el name properties]
   (let [e (js/jQuery.Event. name (clj->js properties))]
    (-> el js/jQuery (.trigger e)))))
+
+; TESTS
+
+(deftest ??events-set-get-data
+ (let [result (j/cell nil)
+       inner (h/div :input #(set-data! % :foo :bar))
+       dom (h/div
+            :input #(reset! result (get-data % :foo))
+            inner)]
+  (is (nil? @result))
+  (trigger-jq! inner "input")
+  (is (= :bar @result))))
