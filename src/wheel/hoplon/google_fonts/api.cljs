@@ -1,5 +1,6 @@
 (ns wheel.hoplon.google-fonts.api
  (:require
+  wheel.hoplon.google-fonts.config
   [cljs.test :refer-macros [deftest is]]))
 
 ; Most Google Fonts functions work with hash maps representing a font.
@@ -22,6 +23,15 @@
  [fonts]
  {:pre [(sequential? fonts)]}
  (clojure.string/join "|" (map font->uri-str fonts)))
+
+(defn get-fallback
+ ([] (get-fallback wheel.hoplon.google-fonts.config/default-fallback))
+ ([k] (get wheel.hoplon.google-fonts.config/well-known-fallbacks k k)))
+
+(defn font->css-str
+ [{:keys [name fallback]}]
+ (let [fallback (or fallback (get-fallback))]
+  (str "font-family: '" name "', " fallback ";")))
 
 ; TESTS
 
