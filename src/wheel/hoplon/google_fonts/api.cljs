@@ -7,7 +7,10 @@
 ; The keys are as follows:
 ; :name = Human readable name exactly as it appears in Google Fonts (required).
 ; :variants = A collection of variant strings, e.g. ["400" "400i" "900"].
-; :fallback = The fallback font to use. Most commonly "serif" or "sans-serif".
+; :fallback = The fallback font to use. Most commonly "serif" or "sans-serif" in
+;             the wild, but excluding the fallback uses the default fallback
+;             from wheel.hoplon.google-fonts.config which is more sophisticated,
+;             for sans-serif fonts at least.
 
 (defn font->uri-str
  "Given a font hash map, returns a string suitable in a Google Fonts URI"
