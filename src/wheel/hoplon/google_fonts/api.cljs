@@ -31,7 +31,7 @@
 (defn font->css-str
  [{:keys [name fallback]}]
  (let [fallback (or fallback (get-fallback))]
-  (str "font-family: '" name "', " fallback ";")))
+  (str "font-family: \"" name "\", " fallback ";")))
 
 ; TESTS
 
@@ -66,3 +66,17 @@
  (is (= (get wheel.hoplon.google-fonts.config/well-known-fallbacks "medium")
         (get-fallback "medium")))
  (is (= "sans-serif" (get-fallback "sans-serif"))))
+
+(deftest ??font->css-str
+ ; oracle
+ (let [[i _] (rand-nth examples)
+       n (:name i)]
+  (is (= (str "font-family: \"" n "\", " (get-fallback) ";")
+         (font->css-str i))))
+
+ (let [[i _] (rand-nth examples)
+       f (str (random-uuid))
+       i (merge i {:fallback f})
+       n (:name i)]
+  (is (= (str "font-family: \"" n "\", " f ";")
+         (font->css-str i)))))
