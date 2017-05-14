@@ -1,4 +1,4 @@
-(ns wheel.hoplon.link.dom
+(ns wheel.link.hoplon
  (:require
   [hoplon.core :as h]
   [wheel.dom.traversal :as dt]
