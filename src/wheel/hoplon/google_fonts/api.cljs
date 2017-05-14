@@ -24,6 +24,11 @@
  {:pre [(sequential? fonts)]}
  (clojure.string/join "|" (map font->uri-str fonts)))
 
+(defn fonts->url
+ "Given a sequence of fonts, returns the entire Google Fonts URL"
+ [fonts]
+ (str wheel.hoplon.google-fonts.config/base-url (fonts->uri-str fonts)))
+
 (defn get-fallback
  ([] (get-fallback wheel.hoplon.google-fonts.config/default-fallback))
  ([k] (get wheel.hoplon.google-fonts.config/well-known-fallbacks k k)))
@@ -58,6 +63,17 @@
  (let [[i o] (rand-nth examples)
        [i' o'] (rand-nth examples)]
   (is (= (str o "|" o') (fonts->uri-str [i i'])))))
+
+(deftest ??fonts->url
+ ; examples
+ (is (= wheel.hoplon.google-fonts.config/base-url (fonts->url [])))
+ (let [[i o] (rand-nth examples)]
+  (is (= (str wheel.hoplon.google-fonts.config/base-url o)
+         (fonts->url [i]))))
+ (let [[i o] (rand-nth examples)
+       [i' o'] (rand-nth examples)]
+  (is (= (str wheel.hoplon.google-fonts.config/base-url o "|" o')
+         (fonts->url [i i'])))))
 
 (deftest ??get-fallback
  ; oracle
