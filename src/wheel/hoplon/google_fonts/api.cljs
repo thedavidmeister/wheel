@@ -52,13 +52,13 @@
  {:pre [(spec/valid? :wheel.font/font font)]}
  (let [name (:wheel.font/name font)
        fallback (or (:wheel.font/fallback font) (get-fallback))]
-  (str "\"" name "\", " fallback ";")))
+  (str "\"" name "\", " fallback)))
 
 (defn font->css-str
  "Given a font map, returns a CSS string, including the fallback"
  [font]
  {:post [(string? %)]}
- (str "font-family: " (font->family-str font)))
+ (str "font-family: " (font->family-str font) ";"))
 
 (defn font->css-map
  "Given a font map, returns a Hoplon CSS map, including the fallback"
@@ -122,10 +122,10 @@
  ; oracle
  (let [[i _] (rand-nth examples)
        n (:wheel.font/name i)]
-  (is (= (str "\"" n "\", " (get-fallback) ";")
+  (is (= (str "\"" n "\", " (get-fallback))
          (font->family-str i)))
 
-  (is (= (str "font-family: " (font->family-str i))
+  (is (= (str "font-family: " (font->family-str i) ";")
          (font->css-str i)))
   (is (= {:font-family (font->family-str i)}
          (font->css-map i))))
@@ -134,10 +134,10 @@
        f (str (random-uuid))
        i (merge i {:wheel.font/fallback f})
        n (:wheel.font/name i)]
-  (is (= (str "\"" n "\", " f ";")
+  (is (= (str "\"" n "\", " f)
          (font->family-str i)))
 
-  (is (= (str "font-family: " (font->family-str i))
+  (is (= (str "font-family: " (font->family-str i) ";")
          (font->css-str i)))
   (is (= {:font-family (font->family-str i)}
          (font->css-map i)))))
