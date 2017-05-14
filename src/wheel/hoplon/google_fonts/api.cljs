@@ -46,13 +46,23 @@
    {:name "foo bar" :variants ["1" "2"]} "foo+bar:1,2"]))
 
 (deftest ??font->uri-str
+ ; examples
  (doseq [[i o] examples]
   (is (= o (font->uri-str i)))))
 
 (deftest ??fonts->uri-str
+ ; examples
  (is (= "" (fonts->uri-str [])))
  (let [[i o] (rand-nth examples)]
   (is (= o (fonts->uri-str [i]))))
  (let [[i o] (rand-nth examples)
        [i' o'] (rand-nth examples)]
   (is (= (str o "|" o') (fonts->uri-str [i i'])))))
+
+(deftest ??get-fallback
+ ; oracle
+ (is (= (get wheel.hoplon.google-fonts.config/well-known-fallbacks wheel.hoplon.google-fonts.config/default-fallback)
+        (get-fallback wheel.hoplon.google-fonts.config/default-fallback)))
+ (is (= (get wheel.hoplon.google-fonts.config/well-known-fallbacks "medium")
+        (get-fallback "medium")))
+ (is (= "sans-serif" (get-fallback "sans-serif"))))
