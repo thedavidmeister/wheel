@@ -1,28 +1,28 @@
 (ns wheel.hoplon.google-fonts.api
  (:require
   wheel.hoplon.google-fonts.config
-  cljs.spec
+  [cljs.spec.alpha :as spec]
   [cljs.test :refer-macros [deftest is]]))
 
 ; Human readable name exactly as it appears in Google Fonts (required).
-(cljs.spec/def ::name string?)
+(spec/def ::name string?)
 
 ; A collection of variant strings, e.g. ["400" "400i" "900"].
-(cljs.spec/def ::variants sequential?)
+(spec/def ::variants sequential?)
 
 ; The fallback font(s) to use. Most commonly "serif" or "sans-serif" in the
 ; wild, but excluding the fallback uses the default fallback from
 ; wheel.hoplon.google-fonts.config which is more sophisticated, for sans-serif
 ; fonts at least.
-(cljs.spec/def ::fallback string?)
+(spec/def ::fallback string?)
 
 ; A Google Font.
-(cljs.spec/def ::font (cljs.spec/keys :req [::name] :opt [::variants ::fallback]))
+(spec/def ::font (cljs.spec/keys :req [::name] :opt [::variants ::fallback]))
 
 (defn font->uri-str
  "Given a font hash map, returns a string suitable in a Google Fonts URI"
  [font]
- {:pre [(cljs.spec/valid? ::font font)]}
+ {:pre [(spec/valid? ::font font)]}
  (let [name (::name font)
        variants (::variants font)
        name-uri (clojure.string/replace name " " "+")
@@ -49,7 +49,7 @@
 (defn font->css-str
  "Given a font map, returns a CSS string, including the fallback"
  [font]
- {:pre [(cljs.spec/valid? ::font font)]}
+ {:pre [(spec/valid? ::font font)]}
  (let [name (::name font)
        fallback (or (::fallback font) (get-fallback))]
   (str "font-family: \"" name "\", " fallback ";")))
@@ -69,9 +69,9 @@
 (deftest ??spec
  ; examples
  (doseq [[i _] examples]
-  (is (cljs.spec/valid? ::font i))
-  (is (cljs.spec/valid? ::font (merge i {::fallback "baz"})))
-  (is (not (cljs.spec/valid? ::font (dissoc i ::name))))))
+  (is (spec/valid? ::font i))
+  (is (spec/valid? ::font (merge i {::fallback "baz"})))
+  (is (not (spec/valid? ::font (dissoc i ::name))))))
 
 (deftest ??font->uri-str
  ; examples
