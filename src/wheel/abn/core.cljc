@@ -1,4 +1,4 @@
-(ns wheel.hoplon.abn.api
+(ns wheel.abn.core
  (:require
   wheel.string
   [cljs.test :refer-macros [deftest is are]]))
