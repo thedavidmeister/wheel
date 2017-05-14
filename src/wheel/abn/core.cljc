@@ -1,7 +1,9 @@
 (ns wheel.abn.core
  (:require
   wheel.string
-  [cljs.test :refer-macros [deftest is are]]))
+  wheel.abn.config
+  #?(:cljs [cljs.test :refer-macros [deftest is are]]
+     :clj [clojure.test :refer [deftest is are]])))
 
 (defn normalize
  [n]
@@ -17,7 +19,7 @@
 (defn abr-search-url
  [n]
  (let [s (wheel.string/no-space (str n))]
-  (str "https://abr.business.gov.au/SearchByAbn.aspx?SearchText=" s)))
+  (str wheel.abn.config/search-base-url s)))
 
 ; TESTS.
 

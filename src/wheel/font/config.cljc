@@ -1,7 +1,7 @@
-(ns wheel.hoplon.google-fonts.config)
+(ns wheel.font.config)
 
 ; Either matches a key in well-known-fallbacks (below) or is a fallback string.
-(goog-define default-fallback "github")
+(def default-fallback "github")
 
 ; https://css-tricks.com/snippets/css/system-font-stack/
 (def well-known-fallbacks
