@@ -1,7 +1,13 @@
 (ns wheel.hoplon.google-fonts.api
  (:require
   wheel.hoplon.google-fonts.config
+  cljs.spec
   [cljs.test :refer-macros [deftest is]]))
+
+(cljs.spec/def ::name string?)
+(cljs.spec/def ::variants sequential?)
+(cljs.spec/def ::fallback string?)
+(cljs.spec/def ::font (cljs.spec/keys :req [::name] :opt [::variants ::fallback]))
 
 ; Most Google Fonts functions work with hash maps representing a font.
 ; The keys are as follows:
@@ -15,7 +21,7 @@
 (defn font->uri-str
  "Given a font hash map, returns a string suitable in a Google Fonts URI"
  [font]
- {:pre [(or (nil? variants) (coll? variants))]}
+ {:pre [(cljs.spec/valid? ::font font)]}
  (let [name (::name font)
        variants (::variants font)
        name-uri (clojure.string/replace name " " "+")
@@ -40,6 +46,7 @@
 
 (defn font->css-str
  [font]
+ {:pre [(cljs.spec/valid? ::font font)]}
  (let [name (::name font)
        fallback (or (::fallback font) (get-fallback))]
   (str "font-family: \"" name "\", " fallback ";")))
@@ -55,6 +62,13 @@
    {::name "foo" ::variants ["1"]} "foo:1"
    {::name "foo" ::variants ["1" "2"]} "foo:1,2"
    {::name "foo bar" ::variants ["1" "2"]} "foo+bar:1,2"]))
+
+(deftest ??spec
+ ; examples
+ (doseq [[i _] examples]
+  (is (cljs.spec/valid? ::font i))
+  (is (cljs.spec/valid? ::font (merge i {::fallback "baz"})))
+  (is (not (cljs.spec/valid? ::font (dissoc i ::name))))))
 
 (deftest ??font->uri-str
  ; examples
