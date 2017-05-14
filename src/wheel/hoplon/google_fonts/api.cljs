@@ -5,26 +5,26 @@
   [cljs.test :refer-macros [deftest is]]))
 
 ; Human readable name exactly as it appears in Google Fonts (required).
-(spec/def ::name string?)
+(spec/def :wheel.font/name string?)
 
 ; A collection of variant strings, e.g. ["400" "400i" "900"].
-(spec/def ::variants sequential?)
+(spec/def :wheel.font/variants sequential?)
 
 ; The fallback font(s) to use. Most commonly "serif" or "sans-serif" in the
 ; wild, but excluding the fallback uses the default fallback from
 ; wheel.hoplon.google-fonts.config which is more sophisticated, for sans-serif
 ; fonts at least.
-(spec/def ::fallback string?)
+(spec/def :wheel.font/fallback string?)
 
 ; A Google Font.
-(spec/def ::font (spec/keys :req [::name] :opt [::variants ::fallback]))
+(spec/def :wheel.font/font (spec/keys :req [:wheel.font/name] :opt [:wheel.font/variants :wheel.font/fallback]))
 
 (defn font->uri-str
  "Given a font hash map, returns a string suitable in a Google Fonts URI"
  [font]
- {:pre [(spec/valid? ::font font)]}
- (let [name (::name font)
-       variants (::variants font)
+ {:pre [(spec/valid? :wheel.font/font font)]}
+ (let [name (:wheel.font/name font)
+       variants (:wheel.font/variants font)
        name-uri (clojure.string/replace name " " "+")
        variants-uri (when (seq variants)
                      (str ":" (clojure.string/join "," variants)))]
@@ -46,32 +46,44 @@
  ([] (get-fallback wheel.hoplon.google-fonts.config/default-fallback))
  ([k] (get wheel.hoplon.google-fonts.config/well-known-fallbacks k k)))
 
+(defn font->family-str
+ "Given a font map, returns a CSS font family string, including the fallback"
+ [font]
+ {:pre [(spec/valid? :wheel.font/font font)]}
+ (let [name (:wheel.font/name font)
+       fallback (or (:wheel.font/fallback font) (get-fallback))]
+  (str "\"" name "\", " fallback ";")))
+
 (defn font->css-str
  "Given a font map, returns a CSS string, including the fallback"
  [font]
- {:pre [(spec/valid? ::font font)]}
- (let [name (::name font)
-       fallback (or (::fallback font) (get-fallback))]
-  (str "font-family: \"" name "\", " fallback ";")))
+ {:post [(string? %)]}
+ (str "font-family: " (font->family-str font)))
+
+(defn font->css-map
+ "Given a font map, returns a Hoplon CSS map, including the fallback"
+ [font]
+ {:post [(map? %)]}
+ {:font-family (font->family-str font)})
 
 ; TESTS
 
 (def examples
  (partition 2
-  [{::name ""} ""
-   {::name "foo"} "foo"
-   {::name "foo bar"} "foo+bar"
-   {::name "foo" ::variants []} "foo"
-   {::name "foo" ::variants ["1"]} "foo:1"
-   {::name "foo" ::variants ["1" "2"]} "foo:1,2"
-   {::name "foo bar" ::variants ["1" "2"]} "foo+bar:1,2"]))
+  [{:wheel.font/name ""} ""
+   {:wheel.font/name "foo"} "foo"
+   {:wheel.font/name "foo bar"} "foo+bar"
+   {:wheel.font/name "foo" :wheel.font/variants []} "foo"
+   {:wheel.font/name "foo" :wheel.font/variants ["1"]} "foo:1"
+   {:wheel.font/name "foo" :wheel.font/variants ["1" "2"]} "foo:1,2"
+   {:wheel.font/name "foo bar" :wheel.font/variants ["1" "2"]} "foo+bar:1,2"]))
 
 (deftest ??spec
  ; examples
  (doseq [[i _] examples]
-  (is (spec/valid? ::font i))
-  (is (spec/valid? ::font (merge i {::fallback "baz"})))
-  (is (not (spec/valid? ::font (dissoc i ::name))))))
+  (is (spec/valid? :wheel.font/font i))
+  (is (spec/valid? :wheel.font/font (merge i {:wheel.font/fallback "baz"})))
+  (is (not (spec/valid? :wheel.font/font (dissoc i :wheel.font/name))))))
 
 (deftest ??font->uri-str
  ; examples
@@ -106,16 +118,26 @@
         (get-fallback "medium")))
  (is (= "sans-serif" (get-fallback "sans-serif"))))
 
-(deftest ??font->css-str
+(deftest ??font->family-str
  ; oracle
  (let [[i _] (rand-nth examples)
-       n (::name i)]
-  (is (= (str "font-family: \"" n "\", " (get-fallback) ";")
-         (font->css-str i))))
+       n (:wheel.font/name i)]
+  (is (= (str "\"" n "\", " (get-fallback) ";")
+         (font->family-str i)))
+
+  (is (= (str "font-family: " (font->family-str i))
+         (font->css-str i)))
+  (is (= {:font-family (font->family-str i)}
+         (font->css-map i))))
 
  (let [[i _] (rand-nth examples)
        f (str (random-uuid))
-       i (merge i {::fallback f})
-       n (::name i)]
-  (is (= (str "font-family: \"" n "\", " f ";")
-         (font->css-str i)))))
+       i (merge i {:wheel.font/fallback f})
+       n (:wheel.font/name i)]
+  (is (= (str "\"" n "\", " f ";")
+         (font->family-str i)))
+
+  (is (= (str "font-family: " (font->family-str i))
+         (font->css-str i)))
+  (is (= {:font-family (font->family-str i)}
+         (font->css-map i)))))
