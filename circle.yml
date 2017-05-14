@@ -19,6 +19,7 @@ dependencies:
     - chmod +x ~/bin/boot
   override:
     - boot tests-cljs
+    - boot tests-clj
   cache_directories:
     - "~/bin"
     - "~/.m2"
