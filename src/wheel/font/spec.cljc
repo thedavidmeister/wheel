@@ -19,7 +19,10 @@
 (spec/def :wheel.font/fallback string?)
 
 ; A Google Font.
-(spec/def :wheel.font/font (spec/keys :req [:wheel.font/name] :opt [:wheel.font/variants :wheel.font/fallback]))
+(spec/def :wheel.font/font
+ (spec/keys
+  :req [:wheel.font/name]
+  :opt [:wheel.font/variants :wheel.font/fallback]))
 
 ; TESTS
 
