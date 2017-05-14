@@ -4,19 +4,20 @@
   cljs.spec
   [cljs.test :refer-macros [deftest is]]))
 
+; Human readable name exactly as it appears in Google Fonts (required).
 (cljs.spec/def ::name string?)
-(cljs.spec/def ::variants sequential?)
-(cljs.spec/def ::fallback string?)
-(cljs.spec/def ::font (cljs.spec/keys :req [::name] :opt [::variants ::fallback]))
 
-; Most Google Fonts functions work with hash maps representing a font.
-; The keys are as follows:
-; :name = Human readable name exactly as it appears in Google Fonts (required).
-; :variants = A collection of variant strings, e.g. ["400" "400i" "900"].
-; :fallback = The fallback font to use. Most commonly "serif" or "sans-serif" in
-;             the wild, but excluding the fallback uses the default fallback
-;             from wheel.hoplon.google-fonts.config which is more sophisticated,
-;             for sans-serif fonts at least.
+; A collection of variant strings, e.g. ["400" "400i" "900"].
+(cljs.spec/def ::variants sequential?)
+
+; The fallback font(s) to use. Most commonly "serif" or "sans-serif" in the
+; wild, but excluding the fallback uses the default fallback from
+; wheel.hoplon.google-fonts.config which is more sophisticated, for sans-serif
+; fonts at least.
+(cljs.spec/def ::fallback string?)
+
+; A Google Font.
+(cljs.spec/def ::font (cljs.spec/keys :req [::name] :opt [::variants ::fallback]))
 
 (defn font->uri-str
  "Given a font hash map, returns a string suitable in a Google Fonts URI"
@@ -41,10 +42,12 @@
  (str wheel.hoplon.google-fonts.config/base-url (fonts->uri-str fonts)))
 
 (defn get-fallback
+ "Looks up a fallback string from the config"
  ([] (get-fallback wheel.hoplon.google-fonts.config/default-fallback))
  ([k] (get wheel.hoplon.google-fonts.config/well-known-fallbacks k k)))
 
 (defn font->css-str
+ "Given a font map, returns a CSS string, including the fallback"
  [font]
  {:pre [(cljs.spec/valid? ::font font)]}
  (let [name (::name font)
