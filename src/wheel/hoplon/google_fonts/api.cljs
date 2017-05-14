@@ -17,7 +17,7 @@
 (spec/def ::fallback string?)
 
 ; A Google Font.
-(spec/def ::font (cljs.spec/keys :req [::name] :opt [::variants ::fallback]))
+(spec/def ::font (spec/keys :req [::name] :opt [::variants ::fallback]))
 
 (defn font->uri-str
  "Given a font hash map, returns a string suitable in a Google Fonts URI"
