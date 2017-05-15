@@ -3,7 +3,7 @@
   wheel.font.config
   wheel.uuid.core
   wheel.font.spec
-  #?(:cljs [cljs.spec.alpha :as spec]
+  #?(:cljs [cljs.spec :as spec]
      :clj [clojure.spec :as spec])
   #?(:cljs [cljs.test :refer-macros [deftest is are]]
      :clj [clojure.test :refer [deftest is are]])))
