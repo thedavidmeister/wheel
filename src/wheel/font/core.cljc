@@ -1,7 +1,6 @@
 (ns wheel.font.core
  (:require
   wheel.font.config
-  wheel.uuid.core
   wheel.font.spec
   medley.core
   #?(:cljs [cljs.spec :as spec]
