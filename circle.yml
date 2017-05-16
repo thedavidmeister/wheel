@@ -32,7 +32,7 @@ test:
     - echo 1
 
 deployment:
-  clojars-snapshot:
+  snapshot:
     branch: master
     commands:
       - boot build-jar push-snapshot
