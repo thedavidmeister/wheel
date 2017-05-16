@@ -1,5 +1,6 @@
 (ns wheel.stylesheet.hoplon
  (:require
+  medley.core
   [hoplon.core :as h]
   [cljs.test :refer-macros [deftest is]]))
 
@@ -13,6 +14,6 @@
 ; TESTS
 
 (deftest ??link
- (let [href (str (random-uuid))]
+ (let [href (str (medley.core/random-uuid))]
   (is (= (.-outerHTML (link href))
          (str "<link href=\"" href "\" rel=\"stylesheet\" type=\"text/css\">")))))

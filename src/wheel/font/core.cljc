@@ -1,8 +1,8 @@
 (ns wheel.font.core
  (:require
   wheel.font.config
-  wheel.uuid.core
   wheel.font.spec
+  medley.core
   #?(:cljs [cljs.spec :as spec]
      :clj [clojure.spec :as spec])
   #?(:cljs [cljs.test :refer-macros [deftest is are]]
@@ -56,7 +56,7 @@
          (font->css-map i))))
 
  (let [[i _] (rand-nth wheel.font.config/test-examples)
-       f (str (wheel.uuid.core/random-uuid))
+       f (str (medley.core/random-uuid))
        i (merge i {:wheel.font/fallback f})
        n (:wheel.font/name i)]
   (is (= (str "\"" n "\", " f)
