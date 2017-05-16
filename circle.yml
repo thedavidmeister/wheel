@@ -34,4 +34,5 @@ test:
 deployment:
   clojars-snapshot:
     branch: master
-    commands: boot build-jar push-snapshot
+    commands:
+      - boot build-jar push-snapshot
