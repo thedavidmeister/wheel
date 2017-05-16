@@ -32,6 +32,7 @@ test:
     - echo 1
 
 deployment:
+  # Push snapshots of master through to clojars
   snapshot:
     branch: master
     commands:
