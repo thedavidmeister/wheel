@@ -8,9 +8,10 @@ All notable changes to this project will be documented in this file. This change
 ## [0.2] - 2017-05-13
 ### Changed
 - Refactored the whole repo, basically
+- Added wheel.address
 
 ### Removed
-- `make-widget-sync` - we're all async, all the time.
+- Removed wheel.uuid and referenced medley.core instead
 
 ### Fixed
 - Issues with both clojure and clojurescript versions for spec
