@@ -5,20 +5,19 @@ All notable changes to this project will be documented in this file. This change
 ### Changed
 - Add a new arity to `make-widget-async` to provide a different widget shape.
 
-## [0.1.1] - 2017-05-13
+## [0.2] - 2017-05-13
 ### Changed
-- Documentation on how to make the widgets.
+- Refactored the whole repo, basically
 
 ### Removed
 - `make-widget-sync` - we're all async, all the time.
 
 ### Fixed
-- Fixed widget maker to keep working when daylight savings switches over.
+- Issues with both clojure and clojurescript versions for spec
 
 ## 0.1.0 - 2017-05-13
 ### Added
 - Files from the new template.
-- Widget maker public API - `make-widget-sync`.
+- Pulled abn, font and some math across from dim valley and estimate work
 
-[Unreleased]: https://github.com/your-name/wheel/compare/0.1.1...HEAD
-[0.1.1]: https://github.com/your-name/wheel/compare/0.1.0...0.1.1
+[Unreleased]: https://github.com/thedavidmeister/wheel/compare/0.1.1...HEAD
