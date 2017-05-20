@@ -37,6 +37,14 @@
  (j/cell= (or (bidi.bidi/match-route routes history)
               {:handler fallback})))
 
+(defn bidi->path
+ ([routes handler] (bidi->path routes handler {}))
+ ([routes handler params]
+  {:pre [(keyword? handler) (map? params)]}
+  (let [with-handler (partial bidi.bidi/path-for routes handler)
+        param-list (->> params (into []) flatten)]
+   (apply with-handler param-list))))
+
 ; TESTS
 
 (deftest ??history-cell--set-hash
@@ -78,3 +86,9 @@
   (set-path! history (str (random-uuid)))
   (is (= @location
          {:handler :bar}))))
+
+(deftest ??bidi->path
+ ; Local route defs.
+ (is (= "/foo" (bidi->path ["/foo" :foo] :foo {})))
+ ; Params.
+ (is (= "/foo/123" (bidi->path ["/foo/" [[["" :bar] :foo]]] :foo {:bar 123}))))
