@@ -62,3 +62,19 @@
 
   (set-path! c "baz")
   (is (= "baz" @c (current-hash)))))
+
+(deftest ??history=->location=
+ (let [history (history-cell)
+       routes (j/cell ["fooo" :foo])
+       fallback (j/cell :bar)
+       location (history=->location= history routes fallback)]
+  (is (= @location
+         {:handler :bar}))
+
+  (set-path! history "fooo")
+  (is (= @location
+         {:handler :foo}))
+
+  (set-path! history (str (random-uuid)))
+  (is (= @location
+         {:handler :bar}))))
