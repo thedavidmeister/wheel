@@ -7,7 +7,7 @@
 (defn external
  ([href] (external href href))
  ([href text]
-  {:pre [(string? href) (string? text)]}
+  {:pre [(string? href)]}
   (h/a
    :href href
    :target "_blank"
