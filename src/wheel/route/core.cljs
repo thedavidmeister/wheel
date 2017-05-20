@@ -25,17 +25,12 @@
  []
  (-> js/window .-location .-hash (cuerdas.core/ltrim "#")))
 
-(defn set-path!
- "Sets the path for a history cell"
- [c s]
- {:pre [(j/cell? c) (string? s)]}
- (reset! c s))
-
-(defn history=->location=
- "Given cells for history, routes and fallback, returns a bidi location cell."
- [history routes fallback]
- (j/cell= (or (bidi.bidi/match-route routes history)
-              {:handler fallback})))
+(defn path->bidi
+ "Given a path, routes and fallback handler, returns a bidi location."
+ ([path routes] (bidi.bidi/match-route routes path))
+ ([path routes fallback]
+  (or (path->bidi path routes)
+      {:handler fallback})))
 
 (defn bidi->path
  "Given a bidi handler, and optionally bidi params, returns a path"
@@ -47,10 +42,16 @@
    (apply with-handler param-list))))
 
 (defn navigate!
- "Set the location to the given handler and params."
+ "Set the history cell to the given handler and params."
  ([history routes handler] (navigate! history routes handler {}))
  ([history routes handler params]
-  (set-path! history (str (bidi->path routes handler params)))))
+  (reset! history (str (bidi->path routes handler params)))))
+
+(defn handler!
+ "Set the history cell to the given handler without changing the params."
+ [history routes handler]
+ {:pre [(j/cell? history) (sequential? routes) (keyword? handler)]}
+ (navigate! history routes handler (-> @history (path->bidi routes) :route-params)))
 
 ; TESTS
 
@@ -73,26 +74,18 @@
 
   ; Can we set c and the window hash by resetting c?
   (reset! c "bar")
-  (is (= "bar" @c (current-hash)))
+  (is (= "bar" @c (current-hash)))))
 
-  (set-path! c "baz")
-  (is (= "baz" @c (current-hash)))))
+(deftest ??path->bidi
+ (let [path (str (random-uuid))
+       handler :foo
+       routes [path handler]
+       fallback :bar]
+  (is (= {:handler handler}
+         (path->bidi path routes fallback)))
 
-(deftest ??history=->location=
- (let [history (history-cell)
-       routes (j/cell ["fooo" :foo])
-       fallback (j/cell :bar)
-       location (history=->location= history routes fallback)]
-  (is (= @location
-         {:handler :bar}))
-
-  (set-path! history "fooo")
-  (is (= @location
-         {:handler :foo}))
-
-  (set-path! history (str (random-uuid)))
-  (is (= @location
-         {:handler :bar}))))
+  (is (= {:handler fallback}
+         (path->bidi (str (random-uuid)) routes fallback)))))
 
 (deftest ??bidi->path
  ; Local route defs.
@@ -111,10 +104,17 @@
 
  (let [history (history-cell)
        path (str (random-uuid))
+       path2 (str (random-uuid))
        param-key :bar
        param-value (str (random-uuid))
        handler :foo
-       routes [path {["/" param-key] handler}]]
+       handler2 :baz
+       routes [path {["/" param-key] handler}
+               path2 {["/" param-key] handler2}]]
   (navigate! history routes handler {param-key param-value})
   (is (= (str path "/" param-value)
-         (current-hash)))))
+         (current-hash)))
+
+  ; Test handler!
+  (handler! history routes handler2)
+  (is (= (str path2 "/" param-value)))))
