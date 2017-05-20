@@ -16,6 +16,9 @@
                             ; Strings
                             [funcool/cuerdas "2.0.3"]
 
+                            ; Data validation
+                            [prismatic/schema "1.1.6"]
+
                             ; Routing
                             [bidi "2.1.1"]])
 

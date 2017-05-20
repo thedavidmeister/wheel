@@ -6,8 +6,12 @@
   medley.core
   cuerdas.core
   [javelin.core :as j]
+  schema.core
+  bidi.schema
   [cljs.test :refer-macros [deftest is async]])
  (:import [goog History]))
+
+(defn routes? [routes] (not (schema.core/check bidi.schema/RoutePair routes)))
 
 (defn history-cell
  "A cell analagous to hoplon's route cell, based on Google Closure History API"
@@ -36,7 +40,7 @@
  "Given a bidi handler, and optionally bidi params, returns a path"
  ([routes handler] (bidi->path routes handler {}))
  ([routes handler params]
-  {:pre [(keyword? handler) (map? params)]}
+  {:pre [(routes? routes) (keyword? handler) (map? params)]}
   (let [with-handler (partial bidi.bidi/path-for routes handler)
         param-list (->> params (into []) flatten)]
    (apply with-handler param-list))))
@@ -45,7 +49,7 @@
  "Set the history cell to the given handler and params"
  ([history routes handler] (navigate! history routes handler {}))
  ([history routes handler params]
-  {:pre [(j/cell? history) (sequential? routes) (keyword? handler) (map? params)]}
+  {:pre [(j/cell? history) (routes? routes) (keyword? handler) (map? params)]}
   (reset! history (str (bidi->path routes handler params)))))
 
 (defn handler!
