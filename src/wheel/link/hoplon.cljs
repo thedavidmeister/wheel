@@ -7,7 +7,7 @@
 (defn external
  ([href] (external href href))
  ([href text]
-  {:pre [(string? href) (string? text)]}
+  {:pre [(string? href)]}
   (h/a
    :href href
    :target "_blank"
@@ -22,7 +22,8 @@
  (is (= t (dt/text l))))
 
 (deftest ??external
- (let [a "foos"
-       t "bars"]
-  (external? (external a) a a)
-  (external? (external a t) a t)))
+ (let [es [["foos" "bars" "bars"]
+           ["foos" (h/div "bars") "bars"]]]
+  (doseq [[a t e] es]
+   (external? (external a) a a)
+   (external? (external a t) a e))))
