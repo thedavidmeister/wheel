@@ -46,6 +46,12 @@
         param-list (->> params (into []) flatten)]
    (apply with-handler param-list))))
 
+(defn navigate!
+ "Set the location to the given handler and params."
+ ([history routes handler] (navigate! history routes handler {}))
+ ([history routes handler params]
+  (set-path! history (str (bidi->path routes handler params)))))
+
 ; TESTS
 
 (deftest ??history-cell--set-hash
@@ -93,3 +99,22 @@
  (is (= "/foo" (bidi->path ["/foo" :foo] :foo {})))
  ; Params.
  (is (= "/foo/123" (bidi->path ["/foo/" [[["" :bar] :foo]]] :foo {:bar 123}))))
+
+(deftest ??navigate!
+ ; no params
+ (let [history (history-cell)
+       path (str (random-uuid))
+       handler :foo
+       routes [path handler]]
+  (navigate! history routes handler)
+  (is (= path (current-hash))))
+
+ (let [history (history-cell)
+       path (str (random-uuid))
+       param-key :bar
+       param-value (str (random-uuid))
+       handler :foo
+       routes [path {["/" param-key] handler}]]
+  (navigate! history routes handler {param-key param-value})
+  (is (= (str path "/" param-value)
+         (current-hash)))))
