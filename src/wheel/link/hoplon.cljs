@@ -22,7 +22,8 @@
  (is (= t (dt/text l))))
 
 (deftest ??external
- (let [a "foos"
-       t "bars"]
-  (external? (external a) a a)
-  (external? (external a t) a t)))
+ (let [es [["foos" "bars"]
+           ["foos" (h/div "bars")]]]
+  (doseq [[a t] es]
+   (external? (external a) a a)
+   (external? (external a t) a t))))
