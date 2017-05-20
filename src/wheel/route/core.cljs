@@ -38,6 +38,7 @@
               {:handler fallback})))
 
 (defn bidi->path
+ "Given a bidi handler, and optionally bidi params, returns a path"
  ([routes handler] (bidi->path routes handler {}))
  ([routes handler params]
   {:pre [(keyword? handler) (map? params)]}
