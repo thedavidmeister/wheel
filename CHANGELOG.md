@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file. This change
 ### Changed
 - Refactored the whole repo, basically
 - Added wheel.address
+- Added wheel.slurp.core
 
 ### Removed
 - Removed wheel.uuid and referenced medley.core instead
