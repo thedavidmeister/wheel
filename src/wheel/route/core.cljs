@@ -10,7 +10,7 @@
  (:import [goog History]))
 
 (defn history-cell
- "A cell analagous to hoplon's route cell, based on Google Closure History API."
+ "A cell analagous to hoplon's route cell, based on Google Closure History API"
  []
  (let [c (j/cell nil)
        history (History.)]
@@ -26,7 +26,7 @@
  (-> js/window .-location .-hash (cuerdas.core/ltrim "#")))
 
 (defn path->bidi
- "Given a path, routes and fallback handler, returns a bidi location."
+ "Given a path, routes and fallback handler, returns a bidi location"
  ([path routes] (bidi.bidi/match-route routes path))
  ([path routes fallback]
   (or (path->bidi path routes)
@@ -42,16 +42,23 @@
    (apply with-handler param-list))))
 
 (defn navigate!
- "Set the history cell to the given handler and params."
+ "Set the history cell to the given handler and params"
  ([history routes handler] (navigate! history routes handler {}))
  ([history routes handler params]
+  {:pre [(j/cell? history) (sequential? routes) (keyword? handler) (map? params)]}
   (reset! history (str (bidi->path routes handler params)))))
 
 (defn handler!
- "Set the history cell to the given handler without changing the params."
+ "Set the history cell to the given handler without changing the params"
  [history routes handler]
- {:pre [(j/cell? history) (sequential? routes) (keyword? handler)]}
- (navigate! history routes handler (-> @history (path->bidi routes) :route-params)))
+ (let [bidi (path->bidi @history routes)]
+  (navigate! history routes handler (:route-params bidi))))
+
+(defn params!
+ "Set the history cell to the given params without changing the handler"
+ [history routes params]
+ (let [bidi (path->bidi @history routes)]
+  (navigate! history routes (:handler bidi) (merge (:route-params bidi) params))))
 
 ; TESTS
 
@@ -104,17 +111,25 @@
 
  (let [history (history-cell)
        path (str (random-uuid))
-       path2 (str (random-uuid))
        param-key :bar
        param-value (str (random-uuid))
        handler :foo
-       handler2 :baz
-       routes [path {["/" param-key] handler}
-               path2 {["/" param-key] handler2}]]
+       routes ["" {path {["/" param-key] handler}}]]
   (navigate! history routes handler {param-key param-value})
   (is (= (str path "/" param-value)
          (current-hash)))
 
   ; Test handler!
-  (handler! history routes handler2)
-  (is (= (str path2 "/" param-value)))))
+  (let [path' (str (random-uuid))
+        handler' :baz
+        routes' ["" {path {["/" param-key] handler}
+                     path' {["/" param-key] handler'}}]]
+   (handler! history routes' handler')
+   (is (= (str path' "/" param-value)
+          (current-hash)))
+
+   ; Test params!
+   (let [param-value' (str (random-uuid))]
+    (params! history routes' {param-key param-value'})
+    (is (= (str path' "/" param-value')
+           (current-hash)))))))
