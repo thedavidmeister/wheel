@@ -1,6 +1,7 @@
 (ns wheel.hoplon.on
  (:require
-  hoplon.core))
+  hoplon.core
+  hoplon.jquery))
 
 ; https://github.com/hoplon/hoplon/pull/154
 (defmethod hoplon.core/on! :hoplon.core/default

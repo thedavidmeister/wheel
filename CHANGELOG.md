@@ -6,10 +6,13 @@ All notable changes to this project will be documented in this file. This change
 - Add a new arity to `make-widget-async` to provide a different widget shape.
 
 ## [0.2] - 2017-05-13
-### Changed
-- Refactored the whole repo, basically
+### Addded
 - Added wheel.address
 - Added wheel.slurp.core
+- Added wheel.route
+
+### Changed
+- Refactored the whole repo, basically
 
 ### Removed
 - Removed wheel.uuid and referenced medley.core instead

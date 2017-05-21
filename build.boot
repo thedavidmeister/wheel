@@ -11,7 +11,16 @@
                             [hoplon "7.0.1"]
 
                             ; Other util libs
-                            [medley "1.0.0"]])
+                            [medley "1.0.0"]
+
+                            ; Strings
+                            [funcool/cuerdas "2.0.3"]
+
+                            ; Data validation
+                            [prismatic/schema "1.1.6"]
+
+                            ; Routing
+                            [bidi "2.1.1"]])
 
 (task-options!
  pom {:project     project
