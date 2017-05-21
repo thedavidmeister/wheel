@@ -21,16 +21,14 @@
                         :wheel.route/preserve-params nil
                         ; Default is value of params.
                         params))
-       handler (if (j/cell? handler) handler (j/cell= handler))
-       routes (if (j/cell? routes) routes (j/cell= routes))
        bidi= (j/cell= (wheel.route.core/path->bidi history routes fallback))
        current-handler? (j/cell= (= handler (:handler bidi=)))
        current-params? (j/cell= (= params (or (:route-params bidi=) {})))]
   (h/a
    :class "route-link"
    :click #(if @params
-            (wheel.route.core/navigate! history @routes @handler @params)
-            (wheel.route.core/handler! history @routes @handler))
+            (wheel.route.core/navigate! history routes handler params)
+            (wheel.route.core/handler! history routes handler))
    :data-current (j/cell=
                   (seq
                    (remove nil? [(when current-handler? "handler")
