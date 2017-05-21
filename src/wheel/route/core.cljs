@@ -11,7 +11,10 @@
   [cljs.test :refer-macros [deftest is async]])
  (:import [goog History]))
 
-(defn routes? [routes] (not (schema.core/check bidi.schema/RoutePair routes)))
+(defn routes? [routes]
+ (if (j/cell? routes)
+  (routes? @routes)
+  (not (schema.core/check bidi.schema/RoutePair routes))))
 
 (defn history-cell
  "A cell analagous to hoplon's route cell, based on Google Closure History API"
@@ -49,8 +52,14 @@
  "Set the history cell to the given handler and params"
  ([history routes handler] (navigate! history routes handler {}))
  ([history routes handler params]
-  {:pre [(j/cell? history) (routes? routes) (keyword? handler) (map? params)]}
-  (reset! history (str (bidi->path routes handler params)))))
+  (let [routes (if (j/cell? routes) @routes routes)
+        handler (if (j/cell? handler) @handler handler)
+        params (if (j/cell? params) @params params)]
+   (assert (j/cell? history))
+   (assert (routes? routes))
+   (assert (keyword? handler))
+   (assert (map? params))
+   (reset! history (str (bidi->path routes handler params))))))
 
 (defn handler!
  "Set the history cell to the given handler without changing the params"
