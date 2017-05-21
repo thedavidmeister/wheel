@@ -108,4 +108,4 @@
    (contains-attrs?
     (h/div (h/div :data-foo v))
     :data-foo
-    val))))
+    v))))
