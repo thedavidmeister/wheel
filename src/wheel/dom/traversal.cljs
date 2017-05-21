@@ -1,7 +1,10 @@
 (ns wheel.dom.traversal
  (:refer-clojure :exclude [find contains? exists? val])
- (:require cljsjs.jquery
-  wheel.dom.events))
+ (:require
+  hoplon.jquery
+  wheel.dom.events
+  [hoplon.core :as h]
+  [cljs.test :refer-macros [deftest is]]))
 
 (defn is?
  [el sel]
@@ -37,7 +40,7 @@
       (every? true?
         (for [attr attrs val vals]
           (some?
-            (find el (str "[" (name attr ) "=" val "]")))))))
+            (find el (str "[" (name attr ) "=\"" val "\"]")))))))
 
 (defn attr
   [el attr-name]
@@ -92,3 +95,17 @@
  (let [target (-> el (find sel) first)]
   (assert target)
   (wheel.dom.events/trigger-jq! target e)))
+
+; TESTS
+
+(deftest ??contains-attrs?
+ (doseq [v [; Basic
+            "bar"
+            ; Need to be able to handle vals with spaces in them. Some versions
+            ; of jQuery choke on this if not escaped correctly.
+            "bar baz"]]
+  (is
+   (contains-attrs?
+    (h/div (h/div :data-foo v))
+    :data-foo
+    val))))
