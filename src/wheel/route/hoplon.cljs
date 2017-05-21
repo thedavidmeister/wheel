@@ -22,14 +22,15 @@
                         ; Default is value of params.
                         params))
        handler (if (j/cell? handler) handler (j/cell= handler))
+       routes (if (j/cell? routes) routes (j/cell= routes))
        bidi= (j/cell= (wheel.route.core/path->bidi history routes fallback))
        current-handler? (j/cell= (= handler (:handler bidi=)))
        current-params? (j/cell= (= params (or (:route-params bidi=) {})))]
   (h/a
    :class "route-link"
    :click #(if @params
-            (wheel.route.core/navigate! history routes @handler @params)
-            (wheel.route.core/handler! history routes @handler))
+            (wheel.route.core/navigate! history @routes @handler @params)
+            (wheel.route.core/handler! history @routes @handler))
    :data-current (j/cell=
                   (seq
                    (remove nil? [(when current-handler? "handler")
@@ -108,4 +109,16 @@
   (reset! handler :baz)
   (reset! params nil)
   (wheel.dom.events/trigger-native! el "click")
-  (is (= "baz" @history))))
+  (is (= "baz" @history)))
+
+ ; Link should support a cell of routes.
+ (let [history (wheel.route.core/history-cell)
+       routes (j/cell= ["" {"foo" :foo
+                            "bar" :bar}])
+       el (link
+           :history history
+           :routes routes
+           :handler :bar)]
+  (reset! history "foo")
+  (wheel.dom.events/trigger-native! el "click")
+  (is (= "bar" @history))))
