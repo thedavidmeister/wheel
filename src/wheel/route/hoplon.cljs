@@ -4,6 +4,7 @@
   wheel.dom.traversal
   wheel.dom.events
   [hoplon.core :as h]
+  hoplon.jquery
   [javelin.core :as j]
   [cljs.test :refer-macros [deftest is]]))
 
@@ -23,63 +24,77 @@
 
        bidi= (j/cell= (wheel.route.core/path->bidi history routes fallback))
        current-handler? (j/cell= (= handler (:handler bidi=)))
-       current-params? (j/cell= (= params (:route-params bidi=)))]
+       current-params? (j/cell= (= params (or (:route-params bidi=) {})))]
   (h/a
    :class "route-link"
    :click #(if params
             (wheel.route.core/navigate! history routes handler params)
             (wheel.route.core/handler! history routes handler))
-   :data-current (j/cell= (remove nil? [(when current-handler? "handler")
-                                        (when current-params? "params")]))
+   :data-current (j/cell=
+                  (seq
+                   (remove nil? [(when current-handler? "handler")
+                                 (when current-params? "params")])))
    (dissoc attributes :history :routes :handler :params :fallback)
    children)))
-
-; (defn a
-;   "Returns a routing link. Pass nil explicitly to params to have them preserved."
-;  ([history routes body handler] (a history body handler {}))
-;  ([history routes body handler params]
-;   {:pre [(j/cell? history)]}
-;   (let [bidi= (j/cell= (wheel.route.core/path->bidi history routes))
-;         handler?= (route.state/handler?= handler)]
-;    (h/a
-;     :class #{"route-link"}
-;     :click #(if params (route.state/navigate! handler params)
-;                        (route.state/handler! handler))
-;     :data-current (j/cell= (when handler?= "handler"))
-;     body))))
 
 ; TESTS
 
 (deftest ??link
- (let [child (h/div)
+ (let [history (wheel.route.core/history-cell)
+       routes ["" {["foo/" :x] :foo
+                   "bar" :bar
+                   ["baz/" :x] :baz}]
+       child (h/div)
        h (j/cell :landing)
-       el (link child h)]
-  (route.state/navigate! :landing)
+       el (link
+           :history history
+           :routes routes
+           :handler :foo
+           :params {:x "123"}
+           child)]
 
   (is (wheel.dom.traversal/contains? el child))
-  (is (wheel.dom.traversal/is? el "[data-current]"))
 
-  (reset! h :privacy)
-  (is (not (wheel.dom.traversal/is? el "[data-current]")))
+  (wheel.route.core/navigate! history routes :foo {:x "123"})
 
-  (route.state/navigate! :privacy)
-  (is (wheel.dom.traversal/is? el "[data-current]"))))
+  (is (wheel.dom.traversal/is? el "[data-current*=handler]"))
+  (is (wheel.dom.traversal/is? el "[data-current*=params]"))
 
-(deftest ??a-click
- (let [p (a "privacy" :privacy)
-       l (a "landing" :landing)
-       current-hash #(-> js/window .-location .-hash)
-       current? #(wheel.dom.traversal/is? % "[data-current=\"handler\"]")]
-  (route.state/navigate! :landing)
-  (is (current? l))
-  (is (not (current? p)))
+  (wheel.route.core/navigate! history routes :foo {:x "456"})
 
-  (wheel.dom.events/trigger-native! p "click")
-  (is (= "/privacy" @route.state/path=))
-  (is (not (current? l)))
-  (is (current? p))
+  (is (wheel.dom.traversal/is? el "[data-current*=handler]"))
+  (is (not (wheel.dom.traversal/is? el "[data-current*=params]")))
 
-  (wheel.dom.events/trigger-native! l "click")
-  (is (= "/" @route.state/path=))
-  (is (current? l))
-  (is (not (current? p)))))
+  ; Handler = :baz, Params = {:x 123}
+  (reset! history "baz/123")
+  (is (not (wheel.dom.traversal/is? el "[data-current*=handler]")))
+  (is (wheel.dom.traversal/is? el "[data-current*=params]"))
+
+  ; Handler = :baz, Params = {:x 456}
+  (reset! history "baz/456")
+  (is (not (wheel.dom.traversal/is? el "[data-current*=handler]")))
+  (is (not (wheel.dom.traversal/is? el "[data-current*=params]")))
+
+  ; Handler = :bar, Params = {}
+  (reset! history "bar")
+  (is (not (wheel.dom.traversal/is? el "[data-current*=handler]")))
+  (is (not (wheel.dom.traversal/is? el "[data-current*=params]")))))
+
+; (deftest ??a-click
+;  (let [p (a "privacy" :privacy)
+;        l (a "landing" :landing)
+;        current-hash #(-> js/window .-location .-hash)
+;        current? #(wheel.dom.traversal/is? % "[data-current=\"handler\"]")]
+;   (route.state/navigate! :landing)
+;   (is (current? l))
+;   (is (not (current? p)))
+;
+;   (wheel.dom.events/trigger-native! p "click")
+;   (is (= "/privacy" @route.state/path=))
+;   (is (not (current? l)))
+;   (is (current? p))
+;
+;   (wheel.dom.events/trigger-native! l "click")
+;   (is (= "/" @route.state/path=))
+;   (is (current? l))
+;   (is (not (current? p)))))
