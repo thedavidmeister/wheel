@@ -21,15 +21,15 @@
                         :wheel.route/preserve-params nil
                         ; Default is value of params.
                         params))
-
+       handler (if (j/cell? handler) handler (j/cell= handler))
        bidi= (j/cell= (wheel.route.core/path->bidi history routes fallback))
        current-handler? (j/cell= (= handler (:handler bidi=)))
        current-params? (j/cell= (= params (or (:route-params bidi=) {})))]
   (h/a
    :class "route-link"
-   :click #(if params
-            (wheel.route.core/navigate! history routes handler params)
-            (wheel.route.core/handler! history routes handler))
+   :click #(if @params
+            (wheel.route.core/navigate! history routes @handler @params)
+            (wheel.route.core/handler! history routes @handler))
    :data-current (j/cell=
                   (seq
                    (remove nil? [(when current-handler? "handler")
@@ -45,7 +45,6 @@
                    "bar" :bar
                    ["baz/" :x] :baz}]
        child (h/div)
-       h (j/cell :landing)
        el (link
            :history history
            :routes routes
@@ -80,21 +79,33 @@
   (is (not (wheel.dom.traversal/is? el "[data-current*=handler]")))
   (is (not (wheel.dom.traversal/is? el "[data-current*=params]")))))
 
-; (deftest ??a-click
-;  (let [p (a "privacy" :privacy)
-;        l (a "landing" :landing)
-;        current-hash #(-> js/window .-location .-hash)
-;        current? #(wheel.dom.traversal/is? % "[data-current=\"handler\"]")]
-;   (route.state/navigate! :landing)
-;   (is (current? l))
-;   (is (not (current? p)))
-;
-;   (wheel.dom.events/trigger-native! p "click")
-;   (is (= "/privacy" @route.state/path=))
-;   (is (not (current? l)))
-;   (is (current? p))
-;
-;   (wheel.dom.events/trigger-native! l "click")
-;   (is (= "/" @route.state/path=))
-;   (is (current? l))
-;   (is (not (current? p)))))
+(deftest ??link-click
+ (let [history (wheel.route.core/history-cell)
+       routes ["" {["foo/" :x] :foo
+                   ["bar/" :x] :bar
+                   "baz" :baz}]
+       params (j/cell :wheel.route/preserve-params)
+       handler (j/cell :foo)
+       el (link
+           :history history
+           :routes routes
+           :handler handler
+           :params params)]
+
+  ; Preserving params.
+  (reset! history "bar/123")
+  (wheel.dom.events/trigger-native! el "click")
+  (is (= "foo/123" @history))
+
+  ; Providing params.
+  (reset! history "bar/123")
+  (reset! params {:x "456"})
+  (wheel.dom.events/trigger-native! el "click")
+  (is (= "foo/456" @history))
+
+  ; No params.
+  (reset! history "bar/123")
+  (reset! handler :baz)
+  (reset! params nil)
+  (wheel.dom.events/trigger-native! el "click")
+  (is (= "baz" @history))))
