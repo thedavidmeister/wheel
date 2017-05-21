@@ -2,6 +2,7 @@
  (:require
   wheel.dom.manipulation
   wheel.hoplon.on
+  hoplon.jquery
   [hoplon.core :as h]
   [javelin.core :as j]
   [cljs.test :refer-macros [deftest is]]))
