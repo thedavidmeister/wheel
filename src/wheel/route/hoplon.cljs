@@ -113,8 +113,8 @@
 
  ; Link should support a cell of routes.
  (let [history (wheel.route.core/history-cell)
-       routes (j/cell= ["foo" :foo
-                        "bar" :bar])
+       routes (j/cell= ["" {"foo" :foo
+                            "bar" :bar}])
        el (link
            :history history
            :routes routes
