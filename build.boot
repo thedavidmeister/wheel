@@ -40,7 +40,11 @@
 
 (bootlaces! version)
 
-(def cljs-compiler-options {})
+(def cljs-compiler-options {:foreign-libs [
+                                           ; ResizeObserver polyfill.
+                                           {:file "https://raw.githubusercontent.com/que-etc/resize-observer-polyfill/master/dist/ResizeObserver.js"
+                                            :provides ["polyfill.ResizeObserver"]}]
+                            :externs ["externs.js"]})
 
 (deftask tests-cljs
   "Run all the CLJS tests"
