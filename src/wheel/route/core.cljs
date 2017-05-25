@@ -34,7 +34,11 @@
 
 (defn path->bidi
  "Given a path, routes and fallback handler, returns a bidi location"
- ([path routes] (bidi.bidi/match-route routes path))
+ ([path routes]
+  (let [routes (if (j/cell? routes) @routes routes)
+        path (if (j/cell? path) @path path)]
+   (assert (routes? routes))
+   (bidi.bidi/match-route routes path)))
  ([path routes fallback]
   (or (path->bidi path routes)
       {:handler fallback})))
@@ -43,34 +47,30 @@
  "Given a bidi handler, and optionally bidi params, returns a path"
  ([routes handler] (bidi->path routes handler {}))
  ([routes handler params]
-  {:pre [(routes? routes) (keyword? handler) (map? params)]}
-  (let [with-handler (partial bidi.bidi/path-for routes handler)
+  (let [routes (if (j/cell? routes) @routes routes)
+        handler (if (j/cell? handler) @handler handler)
+        params (if (j/cell? params) @params params)
+        with-handler (partial bidi.bidi/path-for routes handler)
         param-list (->> params (into []) flatten)]
+   (assert (routes? routes))
    (apply with-handler param-list))))
 
 (defn navigate!
  "Set the history cell to the given handler and params"
  ([history routes handler] (navigate! history routes handler {}))
  ([history routes handler params]
-  (let [routes (if (j/cell? routes) @routes routes)
-        handler (if (j/cell? handler) @handler handler)
-        params (if (j/cell? params) @params params)]
-   (assert (j/cell? history))
-   (assert (routes? routes))
-   (assert (keyword? handler))
-   (assert (map? params))
-   (reset! history (str (bidi->path routes handler params))))))
+  (reset! history (str (bidi->path routes handler params)))))
 
 (defn handler!
  "Set the history cell to the given handler without changing the params"
  [history routes handler]
- (let [bidi (path->bidi @history routes)]
+ (let [bidi (path->bidi history routes)]
   (navigate! history routes handler (:route-params bidi))))
 
 (defn params!
  "Set the history cell to the given params without changing the handler"
  [history routes params]
- (let [bidi (path->bidi @history routes)]
+ (let [bidi (path->bidi history routes)]
   (navigate! history routes (:handler bidi) (merge (:route-params bidi) params))))
 
 ; TESTS
@@ -146,3 +146,13 @@
     (params! history routes' {param-key param-value'})
     (is (= (str path' "/" param-value')
            (current-hash)))))))
+
+(deftest ??handler!
+ ; Check that handler! can handle cells.
+ (let [history (history-cell)
+       path (j/cell= (str (random-uuid)))
+       handler (j/cell= :foo)
+       routes (j/cell= [path handler])]
+  (handler! history routes handler)
+  (is (= (str @path)
+         (current-hash)))))
