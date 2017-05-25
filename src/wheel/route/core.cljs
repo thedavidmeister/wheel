@@ -64,13 +64,13 @@
 (defn handler!
  "Set the history cell to the given handler without changing the params"
  [history routes handler]
- (let [bidi (path->bidi @history routes)]
+ (let [bidi (path->bidi history routes)]
   (navigate! history routes handler (:route-params bidi))))
 
 (defn params!
  "Set the history cell to the given params without changing the handler"
  [history routes params]
- (let [bidi (path->bidi @history routes)]
+ (let [bidi (path->bidi history routes)]
   (navigate! history routes (:handler bidi) (merge (:route-params bidi) params))))
 
 ; TESTS
