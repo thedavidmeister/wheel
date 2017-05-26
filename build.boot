@@ -20,7 +20,10 @@
                             [prismatic/schema "1.1.6"]
 
                             ; Routing
-                            [bidi "2.1.1"]])
+                            [bidi "2.1.1"]
+
+                            ; CLJSJS
+                            [cljsjs/resize-observer-polyfill "1.4.2-0"]])
 
 (task-options!
  pom {:project     project
@@ -40,11 +43,7 @@
 
 (bootlaces! version)
 
-(def cljs-compiler-options {:foreign-libs [
-                                           ; ResizeObserver polyfill.
-                                           {:file "https://raw.githubusercontent.com/que-etc/resize-observer-polyfill/master/dist/ResizeObserver.js"
-                                            :provides ["polyfill.ResizeObserver"]}]
-                            :externs ["externs.js"]})
+(def cljs-compiler-options {})
 
 (deftask tests-cljs
   "Run all the CLJS tests"

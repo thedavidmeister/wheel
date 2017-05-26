@@ -3,7 +3,7 @@
   [hoplon.core :as h]
   [javelin.core :as j]
   wheel.clearfix.hoplon
-  polyfill.ResizeObserver
+  cljsjs.resize-observer-polyfill
   wheel.dom.traversal
   wheel.dom.manipulation
   [cljs.test :refer-macros [deftest is are async]]))
