@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file. This change
 - Added wheel.address
 - Added wheel.slurp.core
 - Added wheel.route
+- Added randomness utils based on xoroshiro128+
 
 ### Changed
 - Refactored the whole repo, basically

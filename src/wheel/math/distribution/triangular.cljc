@@ -58,12 +58,6 @@
  [min mode max]
  (Math/sqrt (variance min mode max)))
 
-(defn estimate
- "Calculate a recommended estimate of mean + 2 std-dev"
- [min mode max]
- (+ (mean min mode max)
-    (* 2 (std-dev min mode max))))
-
 ; All values checked in Mathematica.
 #?(:clj
    ; InverseCDF[TriangularDistribution[{"min", "max"}, "mode"], "U"]

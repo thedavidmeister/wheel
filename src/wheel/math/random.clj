@@ -2,6 +2,7 @@
  (:require
   xoroshiro128.core
   medley.core
+  wheel.math.distribution.triangular
   [clojure.test :refer [deftest is are]]))
 
 (defn rand-seq
