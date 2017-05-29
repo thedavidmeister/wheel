@@ -1,29 +1,33 @@
 (def project 'thedavidmeister/wheel)
 (def version "0.2.0-SNAPSHOT")
 
-(set-env! :source-paths   #{"src"}
-          :dependencies   '[[org.clojure/clojure "1.9.0-alpha15"]
-                            [org.clojure/clojurescript "1.9.521"]
-                            [adzerk/boot-test "RELEASE" :scope "test"]
-                            [adzerk/bootlaces "RELEASE" :scope "test"]
-                            [crisptrutski/boot-cljs-test "0.2.2-SNAPSHOT" :scope "test"]
-                            [adzerk/boot-test "1.1.1" :scope "test"]
-                            [hoplon "7.0.1"]
+(set-env!
+ :source-paths #{"src"}
+ :dependencies '[[org.clojure/clojure "1.9.0-alpha15"]
+                 [org.clojure/clojurescript "1.9.521"]
+                 [adzerk/boot-test "RELEASE" :scope "test"]
+                 [adzerk/bootlaces "RELEASE" :scope "test"]
+                 [crisptrutski/boot-cljs-test "0.2.2-SNAPSHOT" :scope "test"]
+                 [adzerk/boot-test "1.1.1" :scope "test"]
+                 [hoplon "7.0.1"]
 
-                            ; Other util libs
-                            [medley "1.0.0"]
+                 ; Other util libs
+                 [medley "1.0.0"]
 
-                            ; Strings
-                            [funcool/cuerdas "2.0.3"]
+                 ; Math
+                 [thedavidmeister/xoroshiro128 "1.0.2"]
 
-                            ; Data validation
-                            [prismatic/schema "1.1.6"]
+                 ; Strings
+                 [funcool/cuerdas "2.0.3"]
 
-                            ; Routing
-                            [bidi "2.1.1"]
+                 ; Data validation
+                 [prismatic/schema "1.1.6"]
 
-                            ; CLJSJS
-                            [cljsjs/resize-observer-polyfill "1.4.2-0"]])
+                 ; Routing
+                 [bidi "2.1.1"]
+
+                 ; CLJSJS
+                 [cljsjs/resize-observer-polyfill "1.4.2-0"]])
 
 (task-options!
  pom {:project     project
