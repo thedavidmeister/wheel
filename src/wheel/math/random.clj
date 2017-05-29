@@ -15,14 +15,23 @@
     xoroshiro128.core/next
     (xoroshiro128.core/xoroshiro128+ seed)))))
 
+(defn rand-seq->0:1
+  "Maps a sequence of uniformly distributed longs to uniformly distributed floats in the interval [0, 1]."
+  [rands]
+  {:pre [(sequential? rands)]
+   :post [(sequential? %)]}
+  (let [long->1 (fn [l] (Math/abs (/ (double l) (double Long/MAX_VALUE))))]
+   (map long->1 rands)))
+
 ; TESTS
+
+(def sample-size 1000)
 
 (deftest ??rand-seq--seed
  ; Using the same seed should produce the same sequence.
  ; Using a different seed should produce a different sequence.
  (let [seed-1 (medley.core/random-uuid)
-       seed-2 (medley.core/random-uuid)
-       sample-size 1000]
+       seed-2 (medley.core/random-uuid)]
 
   (is (= (take sample-size (rand-seq seed-1))
          (take sample-size (rand-seq seed-1))))
@@ -32,3 +41,21 @@
 
   (is (not (= (take sample-size (rand-seq seed-1))
               (take sample-size (rand-seq seed-2)))))))
+
+(deftest ??rand-seq->0:1--bounds
+ (let [rands (rand-seq)
+       scaled (rand-seq->0:1 rands)]
+  (is
+   (some
+    #(< % -1)
+    (take sample-size rands)))
+
+  (is
+   (some
+    #(> % 1)
+    (take sample-size rands)))
+
+  (is
+   (every?
+    #(and (<= % 1) (>= % 0))
+    (take sample-size scaled)))))
