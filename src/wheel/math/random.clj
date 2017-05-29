@@ -23,6 +23,15 @@
   (let [long->1 (fn [l] (Math/abs (/ (double l) (double Long/MAX_VALUE))))]
    (map long->1 rands)))
 
+(defn rand-seq->triangular
+ "Maps a sequence of uniformly distributed longs to triangularly distributed floats around min, max and mode."
+ [rands min mode max]
+ {:pre [(sequential? rands)]
+  :post [(sequential? %)]}
+ (let [inv-cdf-fn (wheel.math.distribution.triangular/inverse-cdf-fn min mode max)
+       scaled (rand-seq->0:1 rands)]
+  (map inv-cdf-fn scaled)))
+
 ; TESTS
 
 (def sample-size 1000)
