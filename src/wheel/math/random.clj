@@ -68,3 +68,24 @@
    (every?
     #(and (<= % 1) (>= % 0))
     (take sample-size scaled)))))
+
+(deftest ??rand-seq->triangular--bounds
+ (let [rands (rand-seq)
+       min 1
+       mode 10
+       max 100
+       scaled (rand-seq->triangular rands min mode max)]
+  (is
+   (some
+    #(< % -1)
+    (take sample-size rands)))
+
+  (is
+   (some
+    #(> % 1)
+    (take sample-size rands)))
+
+  (is
+   (every?
+    #(and (<= % max) (>= % min))
+    (take sample-size scaled)))))
