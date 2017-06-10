@@ -1,6 +1,7 @@
 (ns wheel.resize-observer.hoplon
  (:require
   [hoplon.core :as h]
+  [hoplon.svg :as svg]
   [javelin.core :as j]
   wheel.clearfix.hoplon
   cljsjs.resize-observer-polyfill
@@ -8,9 +9,10 @@
   wheel.dom.manipulation
   [cljs.test :refer-macros [deftest is are async]]))
 
-(h/defelem div
- [{:keys [width height] :as attributes} children]
- (let [el (h/div
+(h/defelem el
+ [{:keys [width height f] :as attributes} children]
+ (let [f (or f h/div)
+       el (f
            (dissoc attributes :width :height)
            children
            (wheel.clearfix.hoplon/clearfix))
@@ -29,7 +31,15 @@
   (.observe (js/ResizeObserver. cb) el)
   el))
 
+(def div (partial el :f h/div))
+
 ; TESTS
+
+(deftest ??el
+ (is (wheel.dom.traversal/is? (el) "div"))
+ (is (wheel.dom.traversal/is? (el :f h/span) "span"))
+ (is (wheel.dom.traversal/is? (el :f svg/svg) "svg"))
+ (is (wheel.dom.traversal/is? (el :f svg/g) "g")))
 
 (deftest ??div
  (async done
