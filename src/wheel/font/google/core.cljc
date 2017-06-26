@@ -1,5 +1,6 @@
 (ns wheel.font.google.core
  (:require
+  wheel.font.spec
   wheel.font.config
   wheel.font.google.config
   #?(:cljs [cljs.spec :as spec]
