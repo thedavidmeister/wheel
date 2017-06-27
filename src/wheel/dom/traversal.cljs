@@ -6,6 +6,7 @@
   [hoplon.core :as h]
   oops.core
   goog.dom
+  goog.dom.forms
   [cljs.test :refer-macros [deftest is]]))
 
 (defn el? [el] (goog.dom/isElement el))
@@ -78,13 +79,14 @@
  (.-textContent el))
 
 (defn find-text
-  [el sel]
-  {:post [(seq? %)]}
-  (map text (find el sel)))
+ [el sel]
+ {:post [(seq? %)]}
+ (map text (find el sel)))
 
 (defn val
  [el]
- (-> el js/jQuery .val))
+ {:pre [(el? el)]}
+ (.-value el))
 
 (defn find-val
  [el sel]
@@ -160,6 +162,14 @@
  (is (= "foo" (text (h/div "foo"))))
  (is (= "" (text (h/div))))
  (is (= "foobar" (text (h/div (h/div "foo") (h/div "bar"))))))
+
+(deftest ??val
+ (is (= "foo" (val (h/input :value "foo"))))
+ (is (= "foo " (val (h/input :value "foo "))))
+ (is (= 1.5 (val (h/meter :min 0 :value 1.5 :max 2))))
+ (is (= 2.1 (val (h/progress :min 0 :value 2.1 :max 100))))
+ (is (= "" (val (h/input))))
+ (is (= nil (val (h/div)))))
 
 (deftest ??contains-attrs?
  (doseq [v [; Basic
