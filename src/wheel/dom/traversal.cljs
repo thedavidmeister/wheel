@@ -1,12 +1,13 @@
 (ns wheel.dom.traversal
  (:refer-clojure :exclude [find contains? exists? val])
  (:require
-  hoplon.jquery
+  ; hoplon.jquery
   wheel.dom.events
   [hoplon.core :as h]
   oops.core
   goog.dom
   goog.dom.forms
+  hoplon.goog
   [cljs.test :refer-macros [deftest is]]))
 
 (defn el? [el] (goog.dom/isElement el))
@@ -86,7 +87,19 @@
 (defn val
  [el]
  {:pre [(el? el)]}
- (.-value el))
+ ; https://github.com/google/closure-library/issues/833
+ (if (.-type el)
+  (goog.dom.forms/getValue el)
+  (.-value el)))
+
+(defn val!
+ [el v]
+ {:pre [(el? el)]}
+ ; https://github.com/google/closure-library/issues/833
+ (let [v (if (seq? v) (map str v) (str v))]
+  (if (.-type el)
+   (goog.dom.forms/setValue el v)
+   (set! (.-value el) (str v)))))
 
 (defn find-val
  [el sel]
@@ -170,6 +183,15 @@
  (is (= 2.1 (val (h/progress :min 0 :value 2.1 :max 100))))
  (is (= "" (val (h/input))))
  (is (= nil (val (h/div)))))
+
+(deftest ??val!
+ (let [el (h/input)]
+  (val! el "foo")
+  (is (= "foo" (val el))))
+
+ (let [el (h/meter :min 0 :max 10)]
+  (val! el 1.2)
+  (is (= 1.2 (val el)))))
 
 (deftest ??contains-attrs?
  (doseq [v [; Basic
