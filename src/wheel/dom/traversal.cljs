@@ -73,8 +73,9 @@
   (map #(attr % attr-name) (find el sel)))
 
 (defn text
-  [el]
-  (-> el js/jQuery .text))
+ [el]
+ {:pre [(el? el)]}
+ (.-textContent el))
 
 (defn find-text
   [el sel]
@@ -151,9 +152,14 @@
 (deftest ??attr
  (is (= "bar" (attr (h/div :foo "bar") "foo")))
  (is (= "bar" (attr (h/div :foo "bar") :foo)))
- 
+
  (is (= nil (attr (h/div :foo "bar") "baz")))
  (is (= nil (attr (h/div :foo "bar") :baz))))
+
+(deftest ??text
+ (is (= "foo" (text (h/div "foo"))))
+ (is (= "" (text (h/div))))
+ (is (= "foobar" (text (h/div (h/div "foo") (h/div "bar"))))))
 
 (deftest ??contains-attrs?
  (doseq [v [; Basic
