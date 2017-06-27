@@ -40,7 +40,9 @@
 
 (defn children
   [el]
-  (-> el js/jQuery .children array-seq))
+  {:pre [(el? el)]}
+  (array-seq
+   (.-children el)))
 
 (defn exists?
   [el sel]
@@ -130,7 +132,8 @@
  (let [child-1 (h/div)
        child-2 (h/div)
        el (h/div child-1 child-2)]
-  (is (= [child-1 child-2] (find el "div")))))
+  (is (= [child-1 child-2] (find el "div")))
+  (is (= nil (find (h/div) "div")))))
 
 (deftest ??contains?
  (let [child (h/div)
@@ -138,6 +141,13 @@
   (is (contains? el child))
   (is (contains? el "div"))
   (is (not (contains? el el)))))
+
+(deftest ??children
+ (let [child-1 (h/div)
+       child-2 (h/div)
+       el (h/div child-1 child-2)]
+  (is (= [child-1 child-2] (children el)))
+  (is (= nil (children (h/div))))))
 
 (deftest ??contains-attrs?
  (doseq [v [; Basic
