@@ -8,6 +8,7 @@
   goog.dom
   goog.dom.forms
   hoplon.goog
+  goog.events
   [cljs.test :refer-macros [deftest is]]))
 
 (defn el? [el] (goog.dom/isElement el))
@@ -109,7 +110,8 @@
 (defn input-val!
  "Sets the val of el to the given v, but also triggers input, which is often necessary for tests."
  [el v]
- (-> el js/jQuery (.val v) (.trigger "input")))
+ (val! el v)
+ (goog.events/dispatchEvent el goog.events.EventType.INPUT))
 
 (defn find-fn-input-val!
  ([el f v] (find-fn-input-val! el "input" f v))
