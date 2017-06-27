@@ -63,8 +63,9 @@
       (find el (str "[" (name attr ) "=\"" val "\"]")))))))
 
 (defn attr
-  [el attr-name]
-  (-> el js/jQuery (.attr attr-name)))
+ [el attr-name]
+ {:pre [(el? el) (or (string? attr-name) (keyword? attr-name))]}
+ (.getAttribute el (name attr-name)))
 
 (defn find-attr
   [el sel attr-name]
@@ -147,9 +148,12 @@
   (is (= [child-1 child-2] (children el)))
   (is (= nil (children (h/div))))))
 
-(deftest ??exists?
- (is (not (exists? (h/div) "div")))
- (is (exists?)))
+(deftest ??attr
+ (is (= "bar" (attr (h/div :foo "bar") "foo")))
+ (is (= "bar" (attr (h/div :foo "bar") :foo)))
+ 
+ (is (= nil (attr (h/div :foo "bar") "baz")))
+ (is (= nil (attr (h/div :foo "bar") :baz))))
 
 (deftest ??contains-attrs?
  (doseq [v [; Basic
