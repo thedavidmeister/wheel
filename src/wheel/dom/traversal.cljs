@@ -4,11 +4,21 @@
   hoplon.jquery
   wheel.dom.events
   [hoplon.core :as h]
+  oops.core
+  goog.dom
   [cljs.test :refer-macros [deftest is]]))
+
+(defn element? [el] (goog.dom/isElement el))
 
 (defn is?
  [el sel]
- (-> el js/jQuery (.is sel)))
+ {:pre [(element? el)]}
+ ; http://youmightnotneedjquery.com/#matches_selector
+ (let [possible-methods ["matches" "matchesSelector" "msMatchesSelector" "mozMatchesSelector" "webkitMatchesSelector" "oMatchesSelector"]
+       matches (some
+                #(when (oops.core/oget+ el (str "?" %)) %)
+                possible-methods)]
+  (oops.core/ocall+ el matches sel)))
 
 (defn find
  [el sel]
@@ -97,6 +107,14 @@
   (wheel.dom.events/trigger-jq! target e)))
 
 ; TESTS
+
+(deftest ??element?
+ (is (element? (h/div)))
+ (is (not (element? "div"))))
+
+(deftest ??is?
+ (is (is? (h/div) "div"))
+ (is (not (is? (h/div) "span"))))
 
 (deftest ??contains-attrs?
  (doseq [v [; Basic

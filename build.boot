@@ -27,7 +27,10 @@
                  [bidi "2.1.1"]
 
                  ; CLJSJS
-                 [cljsjs/resize-observer-polyfill "1.4.2-0"]])
+                 [cljsjs/resize-observer-polyfill "1.4.2-0"]
+
+                 ; CLJS interop
+                 [binaryage/oops "0.5.3"]])
 
 (task-options!
  pom {:project     project
