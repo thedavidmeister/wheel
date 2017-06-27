@@ -8,11 +8,13 @@
   goog.dom
   [cljs.test :refer-macros [deftest is]]))
 
-(defn element? [el] (goog.dom/isElement el))
+(defn el? [el] (goog.dom/isElement el))
+
+(defn sel? [sel] (string? sel))
 
 (defn is?
  [el sel]
- {:pre [(element? el)]}
+ {:pre [(el? el)]}
  ; http://youmightnotneedjquery.com/#matches_selector
  (let [possible-methods ["matches" "matchesSelector" "msMatchesSelector" "mozMatchesSelector" "webkitMatchesSelector" "oMatchesSelector"]
        matches (some
@@ -22,11 +24,19 @@
 
 (defn find
  [el sel]
- (-> el js/jQuery (.find sel) array-seq))
+ {:pre [(el? el) (sel? sel)]}
+ (array-seq
+  (.querySelectorAll el sel)))
 
 (defn contains?
- [el sel]
- (some? (find el sel)))
+ [el el-or-sel]
+ {:pre [(el? el) (or (sel? el-or-sel)
+                     (el? el-or-sel))]}
+ (if (el? el-or-sel)
+  (and
+   (not (= el el-or-sel))
+   (goog.dom/contains el el-or-sel))
+  (some? (find el el-or-sel))))
 
 (defn children
   [el]
@@ -108,13 +118,26 @@
 
 ; TESTS
 
-(deftest ??element?
- (is (element? (h/div)))
- (is (not (element? "div"))))
+(deftest ??el?
+ (is (el? (h/div)))
+ (is (not (el? "div"))))
 
 (deftest ??is?
  (is (is? (h/div) "div"))
  (is (not (is? (h/div) "span"))))
+
+(deftest ??find
+ (let [child-1 (h/div)
+       child-2 (h/div)
+       el (h/div child-1 child-2)]
+  (is (= [child-1 child-2] (find el "div")))))
+
+(deftest ??contains?
+ (let [child (h/div)
+       el (h/div child)]
+  (is (contains? el child))
+  (is (contains? el "div"))
+  (is (not (contains? el el)))))
 
 (deftest ??contains-attrs?
  (doseq [v [; Basic
