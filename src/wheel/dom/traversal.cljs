@@ -39,30 +39,28 @@
   (some? (find el el-or-sel))))
 
 (defn children
-  [el]
-  {:pre [(el? el)]}
-  (array-seq
-   (.-children el)))
+ [el]
+ {:pre [(el? el)]}
+ (array-seq
+  (.-children el)))
 
-(defn exists?
-  [el sel]
-  (< 0 (count (find el sel))))
+(def exists? contains?)
 
 (defn contains-attrs?
-  [el attrs vals]
-  {:post [(boolean? %)]}
-  (cond
-    (not (coll? attrs))
-    (contains-attrs? el [attrs] vals)
+ [el attrs vals]
+ {:post [(boolean? %)]}
+ (cond
+   (not (coll? attrs))
+   (contains-attrs? el [attrs] vals)
 
-    (not (coll? vals))
-    (contains-attrs? el attrs [vals])
+   (not (coll? vals))
+   (contains-attrs? el attrs [vals])
 
-    :else
-      (every? true?
-        (for [attr attrs val vals]
-          (some?
-            (find el (str "[" (name attr ) "=\"" val "\"]")))))))
+   :else
+   (every? true?
+    (for [attr attrs val vals]
+     (some?
+      (find el (str "[" (name attr ) "=\"" val "\"]")))))))
 
 (defn attr
   [el attr-name]
@@ -148,6 +146,10 @@
        el (h/div child-1 child-2)]
   (is (= [child-1 child-2] (children el)))
   (is (= nil (children (h/div))))))
+
+(deftest ??exists?
+ (is (not (exists? (h/div) "div")))
+ (is (exists?)))
 
 (deftest ??contains-attrs?
  (doseq [v [; Basic
