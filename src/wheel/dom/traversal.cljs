@@ -4,6 +4,7 @@
   ; hoplon.jquery
   wheel.dom.events
   [hoplon.core :as h]
+  [javelin.core :as j]
   oops.core
   goog.dom
   goog.dom.forms
@@ -110,6 +111,7 @@
 (defn input-val!
  "Sets the val of el to the given v, but also triggers input, which is often necessary for tests."
  [el v]
+ {:pre [(el? el)]}
  (val! el v)
  (goog.events/dispatchEvent el goog.events.EventType.INPUT))
 
@@ -206,3 +208,9 @@
     (h/div (h/div :data-foo v))
     :data-foo
     v))))
+
+(deftest ??input-val!
+ (let [c (j/cell nil)
+       el (h/input :input #(reset! c @%))]
+  (input-val! el "foo")
+  (is (= "foo" @c))))
