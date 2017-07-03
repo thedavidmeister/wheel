@@ -18,5 +18,5 @@
 
 ; TESTS.
 
-(deftest ??stops
+(deftest ??colors
  (is (= ["#4DA0B0" "#D39D38"] (colors "Miami Dolphins"))))
