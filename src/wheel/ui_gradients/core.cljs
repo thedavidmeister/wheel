@@ -1,5 +1,6 @@
 (ns wheel.ui-gradients.core
  (:require
+  wheel.json.core
   [cljs.test :refer-macros [deftest is]])
  (:require-macros wheel.slurp.core))
 
@@ -10,7 +11,7 @@
   (get
    (some->>
     (wheel.slurp.core/slurp "https://raw.githubusercontent.com/ghosh/uiGradients/master/gradients.json")
-    parse
+    wheel.json.core/parse
     js->clj
     (filter #(= name (get % "name")))
     first)
