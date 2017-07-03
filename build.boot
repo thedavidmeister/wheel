@@ -26,6 +26,9 @@
                  ; Routing
                  [bidi "2.1.1"]
 
+                 ; Data
+                 [datascript "0.16.1"]
+
                  ; CLJSJS
                  [cljsjs/resize-observer-polyfill "1.4.2-0"]])
 
