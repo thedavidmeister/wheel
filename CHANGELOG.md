@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file. This change
 ## [Unreleased]
 ### Changed
 - Add a new arity to `make-widget-async` to provide a different widget shape.
+- Upgraded to use `clojure.spec.alpha` namespace.
 
 ## [0.2] - 2017-05-13
 ### Addded

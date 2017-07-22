@@ -1,8 +1,7 @@
 (ns wheel.font.spec
  (:require
   wheel.font.config
-  #?(:cljs [cljs.spec :as spec]
-     :clj [clojure.spec :as spec])
+  [clojure.spec.alpha :as spec]
   #?(:cljs [cljs.test :refer-macros [deftest is are]]
      :clj [clojure.test :refer [deftest is are]])))
 
