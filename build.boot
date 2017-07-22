@@ -1,15 +1,15 @@
 (def project 'thedavidmeister/wheel)
-(def version "0.2.0-SNAPSHOT")
+(def version "0.3.0-SNAPSHOT")
 
 (set-env!
  :source-paths #{"src"}
- :dependencies '[[org.clojure/clojure "1.9.0-alpha15"]
-                 [org.clojure/clojurescript "1.9.521"]
+ :dependencies '[[org.clojure/clojure "1.9.0-alpha17"]
+                 [org.clojure/clojurescript "1.9.671"]
                  [adzerk/boot-test "RELEASE" :scope "test"]
                  [adzerk/bootlaces "RELEASE" :scope "test"]
                  [crisptrutski/boot-cljs-test "0.2.2-SNAPSHOT" :scope "test"]
                  [adzerk/boot-test "1.1.1" :scope "test"]
-                 [hoplon "7.0.1"]
+                 [hoplon "7.0.2"]
 
                  ; Other util libs
                  [medley "1.0.0"]
