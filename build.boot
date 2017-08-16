@@ -13,6 +13,7 @@
 
                  ; Other util libs
                  [medley "1.0.0"]
+                 [binaryage/oops "0.5.3"]
 
                  ; Math
                  [thedavidmeister/xoroshiro128 "1.0.2"]
