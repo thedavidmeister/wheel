@@ -3,20 +3,40 @@
  (:require
   hoplon.jquery
   wheel.dom.events
+  goog.dom
+  oops.core
   [hoplon.core :as h]
   [cljs.test :refer-macros [deftest is]]))
 
+(defn el? [el] (goog.dom/isElement el))
+
+(defn sel? [sel] (string? sel))
+
 (defn is?
  [el sel]
- (-> el js/jQuery (.is sel)))
+ {:pre [(el? el)]}
+ ; http://youmightnotneedjquery.com/#matches_selector
+ (let [possible-methods ["matches" "matchesSelector" "msMatchesSelector" "mozMatchesSelector" "webkitMatchesSelector" "oMatchesSelector"]
+       matches (some
+                #(when (oops.core/oget+ el (str "?" %)) %)
+                possible-methods)]
+  (oops.core/ocall+ el matches sel)))
 
 (defn find
  [el sel]
- (-> el js/jQuery (.find sel) array-seq))
+ {:pre [(el? el) (sel? sel)]}
+ (array-seq
+  (.querySelectorAll el sel)))
 
 (defn contains?
- [el sel]
- (some? (find el sel)))
+ [el el-or-sel]
+ {:pre [(el? el) (or (sel? el-or-sel)
+                     (el? el-or-sel))]}
+ (if (el? el-or-sel)
+  (and
+   (not (= el el-or-sel))
+   (goog.dom/contains el el-or-sel))
+  (some? (find el el-or-sel))))
 
 (defn children
   [el]
