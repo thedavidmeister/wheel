@@ -98,7 +98,7 @@
 (defn find-fn-input-val!
  ([el f v] (find-fn-input-val! el "input" f v))
  ([el sel f v]
-  (let [target (-> el js/jQuery (find sel) f)]
+  (let [target (-> el (find sel) f)]
    (assert target)
    (input-val! target v))))
 
@@ -138,3 +138,11 @@
            (h/p "baz"))]
   (is (= ["foo" "bar"]
        (find-text el "span")))))
+
+(deftest ??input-val-first!
+ (let [i1 (h/input)
+       i2 (h/input)
+       el (h/form i1 i2)]
+  (is (= ["" ""] (find-val el "input")))
+  (input-val-first! el "foo")
+  (is (= ["foo" ""] (find-val el "input")))))
