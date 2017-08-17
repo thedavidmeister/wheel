@@ -63,22 +63,23 @@
      (find el (str "[" (name attr ) "=\"" val "\"]")))))))
 
 (defn attr
-  [el attr-name]
-  (-> el js/jQuery (.attr attr-name)))
+ [el attr-name]
+ (-> el js/jQuery (.attr attr-name)))
 
 (defn find-attr
-  [el sel attr-name]
-  {:post [(seq? %)]}
-  (map #(attr % attr-name) (find el sel)))
+ [el sel attr-name]
+ {:post [(seq? %)]}
+ (map #(attr % attr-name) (find el sel)))
 
 (defn text
-  [el]
-  (-> el js/jQuery .text))
+ [el]
+ {:pre [(el? el)]}
+ (.-textContent el))
 
 (defn find-text
-  [el sel]
-  {:post [(seq? %)]}
-  (map text (find el sel)))
+ [el sel]
+ {:post [(seq? %)]}
+ (map text (find el sel)))
 
 (defn val
  [el]
@@ -129,3 +130,11 @@
     (h/div (h/div :data-foo v))
     :data-foo
     v))))
+
+(deftest ??find-text
+ (let [el (h/div
+           (h/span "foo")
+           (h/span "bar")
+           (h/p "baz"))]
+  (is (= ["foo" "bar"]
+       (find-text el "span")))))
