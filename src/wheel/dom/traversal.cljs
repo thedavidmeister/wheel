@@ -47,38 +47,39 @@
   (< 0 (count (find el sel))))
 
 (defn contains-attrs?
-  [el attrs vals]
-  {:post [(boolean? %)]}
-  (cond
-    (not (coll? attrs))
-    (contains-attrs? el [attrs] vals)
+ [el attrs vals]
+ {:post [(boolean? %)]}
+ (cond
+  (not (coll? attrs))
+  (contains-attrs? el [attrs] vals)
 
-    (not (coll? vals))
-    (contains-attrs? el attrs [vals])
+  (not (coll? vals))
+  (contains-attrs? el attrs [vals])
 
-    :else
-      (every? true?
-        (for [attr attrs val vals]
-          (some?
-            (find el (str "[" (name attr ) "=\"" val "\"]")))))))
+  :else
+  (every? true?
+   (for [attr attrs val vals]
+    (some?
+     (find el (str "[" (name attr ) "=\"" val "\"]")))))))
 
 (defn attr
-  [el attr-name]
-  (-> el js/jQuery (.attr attr-name)))
+ [el attr-name]
+ (-> el js/jQuery (.attr attr-name)))
 
 (defn find-attr
-  [el sel attr-name]
-  {:post [(seq? %)]}
-  (map #(attr % attr-name) (find el sel)))
+ [el sel attr-name]
+ {:post [(seq? %)]}
+ (map #(attr % attr-name) (find el sel)))
 
 (defn text
-  [el]
-  (-> el js/jQuery .text))
+ [el]
+ {:pre [(el? el)]}
+ (.-textContent el))
 
 (defn find-text
-  [el sel]
-  {:post [(seq? %)]}
-  (map text (find el sel)))
+ [el sel]
+ {:post [(seq? %)]}
+ (map text (find el sel)))
 
 (defn val
  [el]
@@ -129,3 +130,11 @@
     (h/div (h/div :data-foo v))
     :data-foo
     v))))
+
+(deftest ??find-text
+ (let [el (h/div
+           (h/span "foo")
+           (h/span "bar")
+           (h/p "baz"))]
+  (is (= ["foo" "bar"]
+       (find-text el "span")))))
