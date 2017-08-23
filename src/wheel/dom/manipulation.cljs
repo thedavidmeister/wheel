@@ -1,10 +1,8 @@
-(ns wheel.dom.manipulation
- (:require
-  oops.core))
+(ns wheel.dom.manipulation)
 
 (defn document-append! [el]
  (when-not (.-body js/document)
-  (oops.core/oset! (.-body js/document) (.createElement js/document "body")))
+  (set! (.-body js/document) (.createElement js/document "body")))
  (-> js/document .-body (.appendChild el)))
 
 (defn document-remove! [el]
