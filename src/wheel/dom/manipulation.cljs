@@ -4,7 +4,7 @@
 
 (defn document-append! [el]
  (when-not (.-body js/document)
-  (oops.core/oset (.-body js/document) (.createElement js/document "body")))
+  (oops.core/oset! (.-body js/document) (.createElement js/document "body")))
  (-> js/document .-body (.appendChild el)))
 
 (defn document-remove! [el]
