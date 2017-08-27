@@ -4,8 +4,7 @@
   wheel.font.spec
   medley.core
   [clojure.spec.alpha :as spec]
-  #?(:cljs [cljs.test :refer-macros [deftest is are]]
-     :clj [clojure.test :refer [deftest is are]])))
+  [clojure.test :refer [deftest is]]))
 
 (defn get-fallback
  "Looks up a fallback string from the config"
