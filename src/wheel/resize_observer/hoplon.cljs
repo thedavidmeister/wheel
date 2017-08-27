@@ -69,9 +69,10 @@
     (j/cell= (when correct-height? (prn "ResizeObserver saw correct height.")))
     (j/cell= (when correct-width? (prn "ResizeObserver saw correct width.")))
     ; Shortcut the longer timeout once the dimensions are correct.
-    (j/cell= (when (and correct-height? correct-width?) (done))))
+    (j/cell= (when (and correct-height? correct-width?) (done)))
 
-   ; Short-circuit a failing test so it doesn't hang.
-   (h/with-timeout 100
-    (is false (str "ResizeObserver did not see correct height and width. width: " @width ", height: " @height))
-    (done)))))
+    ; Short-circuit a failing test so it doesn't hang.
+    (h/with-timeout 100
+     (when-not (and @correct-height? @correct-width?)
+      (is false (str "ResizeObserver did not see correct height and width. width: " @width ", height: " @height))
+      (done)))))))

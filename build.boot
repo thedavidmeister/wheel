@@ -3,13 +3,15 @@
 
 (set-env!
  :source-paths #{"src"}
- :dependencies '[[org.clojure/clojure "1.9.0-alpha17"]
-                 [org.clojure/clojurescript "1.9.671"]
+ :dependencies '[[org.clojure/clojure "1.9.0-alpha19"]
+                 [org.clojure/clojurescript "1.9.908"]
                  [adzerk/boot-test "RELEASE" :scope "test"]
                  [adzerk/bootlaces "RELEASE" :scope "test"]
-                 [crisptrutski/boot-cljs-test "0.2.2-SNAPSHOT" :scope "test"]
+                 [adzerk/boot-cljs "2.1.2"]
+                 [doo "0.1.7"]
+                 [crisptrutski/boot-cljs-test "0.3.3" :scope "test"]
                  [adzerk/boot-test "1.1.1" :scope "test"]
-                 [hoplon "7.0.2"]
+                 [hoplon "7.1.0-SNAPSHOT"]
 
                  ; Other util libs
                  [medley "1.0.0"]
@@ -66,7 +68,8 @@
     (test-cljs :exit? (not watch?)
                ; :js-env :chrome
                :cljs-opts (-> cljs-compiler-options
-                              (merge {:load-tests true}))
+                              (merge {:load-tests true
+                                      :process-shim false}))
                :namespaces [#".*"])))
 
 (defn test-filter-for-wip

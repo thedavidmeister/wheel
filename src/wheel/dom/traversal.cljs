@@ -5,16 +5,13 @@
   wheel.dom.events
   goog.dom
   oops.core
+  wheel.dom.data
   [hoplon.core :as h]
   [cljs.test :refer-macros [deftest is]]))
 
-(defn el? [el] (goog.dom/isElement el))
-
-(defn sel? [sel] (string? sel))
-
 (defn is?
  [el sel]
- {:pre [(el? el)]}
+ {:pre [(wheel.dom.data/el? el)]}
  ; http://youmightnotneedjquery.com/#matches_selector
  (let [possible-methods ["matches" "matchesSelector" "msMatchesSelector" "mozMatchesSelector" "webkitMatchesSelector" "oMatchesSelector"]
        matches (some
@@ -24,15 +21,16 @@
 
 (defn find
  [el sel]
- {:pre [(el? el) (sel? sel)]}
+ {:pre [(wheel.dom.data/el? el)
+        (wheel.dom.data/sel? sel)]}
  (array-seq
   (.querySelectorAll el sel)))
 
 (defn contains?
  [el el-or-sel]
- {:pre [(el? el) (or (sel? el-or-sel)
-                     (el? el-or-sel))]}
- (if (el? el-or-sel)
+ {:pre [(wheel.dom.data/el? el)
+        (wheel.dom.data/el-or-sel? el-or-sel)]}
+ (if (wheel.dom.data/el? el-or-sel)
   (and
    (not (= el el-or-sel))
    (goog.dom/contains el el-or-sel))
@@ -73,12 +71,14 @@
 
 (defn text
  [el]
- {:pre [(el? el)]}
+ {:pre [(wheel.dom.data/el? el)]}
  (.-textContent el))
 
 (defn find-text
  [el sel]
- {:post [(seq? %)]}
+ {:pre [(wheel.dom.data/el? el)
+        (wheel.dom.data/sel? sel)]
+  :post [(seq? %)]}
  (map text (find el sel)))
 
 (defn val
@@ -87,7 +87,9 @@
 
 (defn find-val
  [el sel]
- {:post [(seq? %)]}
+ {:pre [(wheel.dom.data/el? el)
+        (wheel.dom.data/sel? sel)]
+  :post [(seq? %)]}
  (map val (find el sel)))
 
 (defn input-val!
