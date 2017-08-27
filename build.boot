@@ -7,6 +7,8 @@
                  [org.clojure/clojurescript "1.9.908"]
                  [adzerk/boot-test "RELEASE" :scope "test"]
                  [adzerk/bootlaces "RELEASE" :scope "test"]
+                 [adzerk/boot-cljs "2.1.2"]
+                 [doo "0.1.7"]
                  [crisptrutski/boot-cljs-test "0.3.3" :scope "test"]
                  [adzerk/boot-test "1.1.1" :scope "test"]
                  [hoplon "7.1.0-SNAPSHOT"]
