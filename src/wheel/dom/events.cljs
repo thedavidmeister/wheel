@@ -3,9 +3,7 @@
   wheel.dom.manipulation
   wheel.hoplon.on
   hoplon.jquery
-  [hoplon.core :as h]
-  [javelin.core :as j]
-  [cljs.test :refer-macros [deftest is]]))
+  wheel.dom.data))
 
 (defn ensure-original-object!
  [e]
@@ -34,7 +32,7 @@
 ; https://www.w3.org/TR/DOM-Level-3-Events/#events-Events-DocumentEvent-createEvent
 (defn trigger-native!
  [el name]
- {:pre [(instance? js/Element el)]}
+ {:pre [(wheel.dom.data/el? el)]}
  (let [e (.createEvent js/document "UIEvents")]
   (.initEvent e name true true)
   (.dispatchEvent el e)))
@@ -44,15 +42,3 @@
  ([el name properties]
   (let [e (js/jQuery.Event. name (clj->js properties))]
    (-> el js/jQuery (.trigger e)))))
-
-; TESTS
-
-(deftest ??events-set-get-data
- (let [result (j/cell nil)
-       inner (h/div :input #(set-data! % :foo :bar))
-       dom (h/div
-            :input #(reset! result (get-data % :foo))
-            inner)]
-  (is (nil? @result))
-  (trigger-jq! inner "input")
-  (is (= :bar @result))))
