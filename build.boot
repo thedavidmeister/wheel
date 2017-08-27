@@ -68,7 +68,8 @@
     (test-cljs :exit? (not watch?)
                ; :js-env :chrome
                :cljs-opts (-> cljs-compiler-options
-                              (merge {:load-tests true}))
+                              (merge {:load-tests true
+                                      :process-shim false}))
                :namespaces [#".*"])))
 
 (defn test-filter-for-wip
