@@ -3,7 +3,6 @@
   [hoplon.core :as h]
   goog.dom
   [clojure.spec.alpha :as spec]
-  [cljs.test :refer-macros [deftest is]]
   [clojure.test.check.generators :as gen]))
 
 (spec/def :wheel.dom/element
