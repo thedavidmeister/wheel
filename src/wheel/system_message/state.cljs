@@ -1,5 +1,6 @@
-(ns system-message.state
+(ns wheel.system-message.state
  (:require
+  [datascript.core :as d]
   [hoplon.core :as h]
   [javelin.core :as j]
   wheel.datascript.javelin
