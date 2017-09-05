@@ -4,7 +4,7 @@
   [javelin.core :as j]
   wheel.datascript.javelin
   wheel.system-message.data
-  test.util
+  wheel.test.util
   [clojure.spec.alpha :as spec]
   [cljs.test :refer-macros [deftest is]]))
 
