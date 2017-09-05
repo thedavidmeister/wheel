@@ -1,13 +1,7 @@
 (ns wheel.test.util
  (:require
   clojure.test.check.generators
-  [clojure.spec.alpha :as spec]
-  ; Places where specs are defined.
-  project.data
-  auth.data
-  item.data
-  time.data
-  datascript.data))
+  [clojure.spec.alpha :as spec]))
 
 (def seen (atom #{}))
 
