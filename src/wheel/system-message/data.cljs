@@ -1,4 +1,4 @@
-(ns system-message.data
+(ns wheel.system-message.data
  (:require
   [clojure.spec.alpha :as spec]
   wheel.dom.data))

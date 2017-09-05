@@ -1,13 +1,10 @@
 (ns system-message.state
  (:require
-  [datascript.core :as d]
   [hoplon.core :as h]
   [javelin.core :as j]
   wheel.datascript.javelin
-  system-message.data
-  datascript.data
+  wheel.system-message.data
   test.util
-  medley.core
   [clojure.spec.alpha :as spec]
   [cljs.test :refer-macros [deftest is]]))
 
@@ -62,7 +59,7 @@
 (deftest ??+!
  (let [ms (messages-cell)
        n (not-seen= ms)
-       m (dissoc (test.util/fake :system-message/message) :system-message/seen)
+       m (dissoc (wheel.test.util/fake :system-message/message) :system-message/seen)
        k (+! ms m)
        e (merge m {:system-message/seen false
                    :system-message/id k})]
