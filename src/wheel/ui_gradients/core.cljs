@@ -7,14 +7,12 @@
 (defn colors
  "Fetch stops from uigradients.com"
  [name]
- (let [parse (.-parse js/JSON)]
-  (get
-   (some->>
-    (wheel.slurp.core/slurp "https://raw.githubusercontent.com/ghosh/uiGradients/master/gradients.json")
-    wheel.json.core/parse
-    (filter #(= name (get % "name")))
-    first)
-   "colors")))
+ (some->>
+  (wheel.slurp.core/slurp "https://raw.githubusercontent.com/ghosh/uiGradients/master/gradients.json")
+  wheel.json.core/parse
+  (filter #(= name (:name %)))
+  first
+  :colors))
 
 ; TESTS.
 
