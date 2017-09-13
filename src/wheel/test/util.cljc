@@ -19,7 +19,9 @@
  ; {:post [(or (spec/valid? k %) (prn %) (spec/explain k %))]}
  (let [size (or size 50)
        v (clojure.test.check.generators/generate
-          (clojure.spec.alpha/gen k)
+          (if (clojure.test.check.generators/generator? k)
+           k
+           (clojure.spec.alpha/gen k))
           size)
        ret (if merge (clojure.core/merge v merge) v)
        unique? (if (nil? unique?) true unique?)
