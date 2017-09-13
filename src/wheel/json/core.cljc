@@ -16,11 +16,13 @@
 (defn parse
  [json-string]
  {:pre [(spec/valid? :wheel.json/json-string json-string)]}
- #?(:cljs (js->clj (.parse js/JSON json-string))
-    :clj (cheshire.core/parse-string json-string)))
+ (clojure.walk/keywordize-keys
+  #?(:cljs (js->clj (.parse js/JSON json-string))
+     :clj (cheshire.core/parse-string json-string))))
 
 ; TESTS
 
 (deftest ??round-trip
  (let [d (wheel.test.util/fake clojure.test.check.generators/any)]
-  (is (= d (parse (string d))))))
+  (is (= (clojure.walk/keywordize-keys d)
+       (parse (string d))))))
