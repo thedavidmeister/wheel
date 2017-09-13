@@ -4,11 +4,15 @@
   [clojure.test :refer [deftest is]]
   wheel.test.util))
 
-(spec/def :string/not-blank
- (spec/and string? (complement clojure.string/blank?)))
+(spec/def :wheel.string/string string?)
+
+(spec/def :wheel.string/not-blank
+ (spec/and
+  :wheel.string/string
+  (complement clojure.string/blank?)))
 
 ; TESTS
 
 (deftest ??not-blank
- (is (string? (wheel.test.util/fake :string/not-blank)))
- (is (not (clojure.string/blank? (wheel.test.util/fake :string/not-blank)))))
+ (is (string? (wheel.test.util/fake :wheel.string/not-blank)))
+ (is (not (clojure.string/blank? (wheel.test.util/fake :wheel.string/not-blank)))))

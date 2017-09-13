@@ -16,12 +16,14 @@
                  ; Other util libs
                  [medley "1.0.0"]
                  [binaryage/oops "0.5.6"]
+                 [com.taoensso/timbre "4.10.0"]
 
                  ; Math
                  [thedavidmeister/xoroshiro128 "1.0.2"]
 
                  ; Strings
                  [funcool/cuerdas "2.0.3"]
+                 [cheshire "5.8.0"]
 
                  ; Data validation
                  [prismatic/schema "1.1.6"]
