@@ -30,5 +30,5 @@
        e (clojure.walk/keywordize-keys
           #?(:clj d
              :cljs (js->clj (clj->js d))))]
-  (is (= e
-       (parse (string d))))))
+  (is (= (string d)
+       (string (parse (string d)))))))
