@@ -12,7 +12,6 @@
    (some->>
     (wheel.slurp.core/slurp "https://raw.githubusercontent.com/ghosh/uiGradients/master/gradients.json")
     wheel.json.core/parse
-    js->clj
     (filter #(= name (get % "name")))
     first)
    "colors")))

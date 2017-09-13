@@ -10,13 +10,13 @@
 (defn string
  [data]
  {:post [(spec/valid? :wheel.json/json-string %)]}
- #?(:cljs (.stringify js/JSON data)
+ #?(:cljs (.stringify js/JSON (clj->js data))
     :clj (cheshire.core/generate-string data)))
 
 (defn parse
  [json-string]
  {:pre [(spec/valid? :wheel.json/json-string json-string)]}
- #?(:cljs (.parse js/JSON json-string)
+ #?(:cljs (js->clj (.parse js/JSON json-string))
     :clj (cheshire.core/parse-string json-string)))
 
 ; TESTS
