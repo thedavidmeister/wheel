@@ -30,7 +30,7 @@
                   [true "true" true]
                   [false "false" false]
                   [{} "{}" {}]
-                  [{"foo" "bar"} "{\"foo\": \"bar\"}" {:foo "bar"}]
-                  [{:foo "bar"} "{\"foo\": \"bar\"}" {:foo "bar"}]]]
+                  [{"foo" "bar"} "{\"foo\":\"bar\"}" {:foo "bar"}]
+                  [{:foo "bar"} "{\"foo\":\"bar\"}" {:foo "bar"}]]]
   (is (= s (string t)))
   (is (= p (parse (string t))))))
