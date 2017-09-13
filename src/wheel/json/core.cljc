@@ -16,13 +16,21 @@
 (defn parse
  [json-string]
  {:pre [(spec/valid? :wheel.json/json-string json-string)]}
- (clojure.walk/keywordize-keys
-  #?(:cljs (js->clj (.parse js/JSON json-string))
-     :clj (cheshire.core/parse-string json-string))))
+ #?(:cljs
+    (clojure.walk/keywordize-keys
+     (js->clj (.parse js/JSON json-string)))
+    :clj (cheshire.core/parse-string json-string true)))
 
 ; TESTS
 
 (deftest ??round-trip
- (let [d (wheel.test.util/fake clojure.test.check.generators/any)]
-  (is (= (clojure.walk/keywordize-keys d)
-       (parse (string d))))))
+ ; test check finds things that don't really handle round trips well at all,
+ ; like nested NaN and namespaced keywords or "weird" keys that JS doesn't like.
+ (doseq [[t s p] [[1 "1" 1]
+                  [true "true" true]
+                  [false "false" false]
+                  [{} "{}" {}]
+                  [{"foo" "bar"} "{\"foo\":\"bar\"}" {:foo "bar"}]
+                  [{:foo "bar"} "{\"foo\":\"bar\"}" {:foo "bar"}]]]
+  (is (= s (string t)))
+  (is (= p (parse (string t))))))
