@@ -4,7 +4,7 @@
   [clojure.test :refer [deftest is]]
   wheel.test.util))
 
-(spec :string/not-blank
+(spec/def :string/not-blank
  (spec/and string? (complement clojure.string/blank?)))
 
 ; TESTS
