@@ -11,4 +11,4 @@
 
 (deftest ??not-blank
  (is (string? (wheel.test.util/fake :string/not-blank)))
- (is (not (clojure.blank? (wheel.test.util/fake :string/not-blank)))))
+ (is (not (clojure.string/blank? (wheel.test.util/fake :string/not-blank)))))
