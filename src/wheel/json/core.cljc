@@ -23,6 +23,11 @@
 ; TESTS
 
 (deftest ??round-trip
- (let [d (wheel.test.util/fake clojure.test.check.generators/any)]
-  (is (= (clojure.walk/keywordize-keys d)
+ (let [d (wheel.test.util/fake clojure.test.check.generators/any)
+       ; the round trip is lossy, especially for cljs where we go through
+       ; both clj->js and keywordize-keys.
+       e (clojure.walk/keywordize-keys
+          #?(:clj d
+             :cljs (js->clj (clj->js d))))]
+  (is (= e
        (parse (string d))))))
