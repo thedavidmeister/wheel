@@ -16,9 +16,10 @@
 (defn parse
  [json-string]
  {:pre [(spec/valid? :wheel.json/json-string json-string)]}
- (clojure.walk/keywordize-keys
-  #?(:cljs (js->clj (.parse js/JSON json-string))
-     :clj (cheshire.core/parse-string json-string))))
+ #?(:cljs
+    (clojure.walk/keywordize-keys
+     (js->clj (.parse js/JSON json-string)))
+    :clj (cheshire.core/parse-string json-string true)))
 
 ; TESTS
 
