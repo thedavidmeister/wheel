@@ -23,6 +23,7 @@
 
                  ; Strings
                  [funcool/cuerdas "2.0.3"]
+                 [cheshire "5.8.0"]
 
                  ; Data validation
                  [prismatic/schema "1.1.6"]
