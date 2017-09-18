@@ -37,7 +37,7 @@
 (deftest ??legislature
  (let [n "foooos"
        el (legislature n)]
-  (is (wheel.dom.traversal/is? el "em"))
+  (is (wheel.dom.traversal/is? el "em.legislature"))
   (is (= n (wheel.dom.traversal/text el)))))
 
 (deftest ??clause-list
