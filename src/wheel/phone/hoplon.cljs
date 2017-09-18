@@ -9,7 +9,7 @@
 
 (defn phone
  [p]
- (let [p (j/cell= (cuerdas.core/collapse-whitespace (or p phone.config/default)))]
+ (let [p (j/cell= (cuerdas.core/collapse-whitespace p))]
   (h/a
    :class #{"phone"}
    :href (j/cell= (str "tel:" (wheel.string.core/no-space p)))
