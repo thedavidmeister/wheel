@@ -1,6 +1,7 @@
 (ns wheel.phone.hoplon
  (:require
   [hoplon.core :as h]
+  [javelin.core :as j]
   cuerdas.core
   wheel.dom.traversal
   wheel.string.core
