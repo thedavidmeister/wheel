@@ -1,4 +1,4 @@
-(ns legalese.hoplon
+(ns wheel.legalese.hoplon
  (:require
   [hoplon.core :as h]
   [clojure.spec.alpha :as spec]
@@ -46,5 +46,7 @@
         post "bar"
         without-post (clause-list pre items)
         with-post (clause-list pre items post)]
-    (is (= "<section><span>foo</span><ul><li>one</li><li>two</li><li>three</li></ul></section>" (.-outerHTML without-post)))
+    (is (= ["foo"])
+
+     "<section><span>foo</span><ul><li>one</li><li>two</li><li>three</li></ul></section>" (.-outerHTML without-post))
     (is (= "<section><span>foo</span><ul><li>one</li><li>two</li><li>three</li></ul><span>bar</span></section>" (.-outerHTML with-post)))))
