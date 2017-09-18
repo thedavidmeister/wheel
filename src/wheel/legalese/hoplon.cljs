@@ -46,7 +46,20 @@
         post "bar"
         without-post (clause-list pre items)
         with-post (clause-list pre items post)]
-    (is (= ["foo"])
+    (is (wheel.dom.traversal/is? without-post "section.clause-list"))
+    (is (wheel.dom.traversal/is? with-post "section.clause-list"))
 
-     "<section><span>foo</span><ul><li>one</li><li>two</li><li>three</li></ul></section>" (.-outerHTML without-post))
-    (is (= "<section><span>foo</span><ul><li>one</li><li>two</li><li>three</li></ul><span>bar</span></section>" (.-outerHTML with-post)))))
+    (is (= ["foo"]
+         (wheel.dom.traversal/find-text without-post "span.preamble")))
+    (is (= ["foo"]
+         (wheel.dom.traversal/find-text with-post "span.preamble")))
+
+    (is (= ["one" "two" "three"]
+         (wheel.dom.traversal/find-text without-post "li.clause")))
+    (is (= ["one" "two" "three"]
+         (wheel.dom.traversal/find-text with-post "li.clause")))
+
+    (is (= []
+         (wheel.dom.traversal/find-text without-post "span.postamble")))
+    (is (= ["bar"]
+         (wheel.dom.traversal/find-text with-post "span.postamble")))))
