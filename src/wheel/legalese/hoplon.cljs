@@ -1,7 +1,8 @@
 (ns legalese.hoplon
  (:require
   [hoplon.core :as h]
-  [clojure.spec.alpha :as spec]))
+  [clojure.spec.alpha :as spec]
+  [cljs.test :refer-macros [deftest is]]))
 
 (defn legislature
  [name]
