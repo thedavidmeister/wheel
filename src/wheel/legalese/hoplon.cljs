@@ -2,7 +2,8 @@
  (:require
   [hoplon.core :as h]
   [clojure.spec.alpha :as spec]
-  [cljs.test :refer-macros [deftest is]]))
+  [cljs.test :refer-macros [deftest is]]
+  wheel.dom.traversal))
 
 (defn legislature
  [name]
