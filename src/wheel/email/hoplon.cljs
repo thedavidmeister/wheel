@@ -4,6 +4,7 @@
   [javelin.core :as j]
   [clojure.spec.alpha :as spec]
   wheel.email.spec
+  wheel.dom.traversal
   [cljs.test :refer-macros [deftest is]]))
 
 (h/defelem email
@@ -25,10 +26,11 @@
        s (j/cell "Emails have subject lines")
        b (j/cell "This is the body of the email.")
        c (j/cell example-email)
-       el (email :address a
-                 :subject s
-                 :body b
-                 c)]
+       el (email
+           :address a
+           :subject s
+           :body b
+           c)]
   (is (wheel.dom.traversal/is? el "a.email"))
   (is (wheel.dom.traversal/is? el (str "a[href=\"mailto:" example-email "?subject=Emails have subject lines&body=This is the body of the email.\"] ")))
   (is (= @c (wheel.dom.traversal/text el)))
@@ -38,3 +40,13 @@
   (reset! c "as;lkfj")
   (is (wheel.dom.traversal/is? el (str "a[href=\"mailto:as;lkfj?subject=as;lkfj&body=as;lkfj\"]")))
   (is (= @c (wheel.dom.traversal/text el)))))
+
+(deftest ??email--invalid
+ (let [valid "foo@example.com"
+       invalid "foo"
+       a (j/cell valid)
+       el (email
+           :address a)]
+  (is (not (wheel.dom.traversal/is? el "[data-invalid-address]")))
+  (reset! a invalid)
+  (is (wheel.dom.traversal/is? el "[data-invalid-address]"))))
