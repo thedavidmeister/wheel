@@ -44,7 +44,7 @@
 
 (deftest ??email--invalid
  (let [valid (wheel.test.util/fake :wheel.email/email)
-       invalid "foo"
+       invalid (wheel.test.util/fake (spec/and string? #(not (re-matches wheel.email.spec/regex %))))
        a (j/cell valid)
        el (email
            :address a)]
