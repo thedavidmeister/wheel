@@ -7,10 +7,15 @@
 (def regex #".+@.+\..+")
 
 (spec/def :wheel.email/email
- (spec/spec
-  (spec/and
-   string?
-   (partial re-matches regex))
-  :gen
-  (constantly
-   (com.gfredericks.test.chuck.generators/string-from-regex regex))))
+ #?{:clj
+    (spec/spec
+     (spec/and
+      string?
+      (partial re-matches regex))
+     :gen
+     (constantly
+      (com.gfredericks.test.chuck.generators/string-from-regex regex)))
+    :cljs
+    (spec/and
+     string?
+     (partial re-matches regex))})
