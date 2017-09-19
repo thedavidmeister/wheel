@@ -3,39 +3,42 @@
 
 (set-env!
  :source-paths #{"src"}
- :dependencies '[[org.clojure/clojure "1.9.0-alpha19"]
-                 [org.clojure/clojurescript "1.9.908"]
-                 [adzerk/boot-test "RELEASE" :scope "test"]
-                 [adzerk/bootlaces "RELEASE" :scope "test"]
-                 [adzerk/boot-cljs "2.1.2"]
-                 [doo "0.1.7"]
-                 [crisptrutski/boot-cljs-test "0.3.3" :scope "test"]
-                 [adzerk/boot-test "1.1.1" :scope "test"]
-                 [hoplon "7.1.0-SNAPSHOT"]
+ :dependencies
+ '[[org.clojure/clojure "1.9.0-alpha19"]
+   [org.clojure/clojurescript "1.9.908"]
+   [adzerk/boot-test "RELEASE" :scope "test"]
+   [adzerk/bootlaces "RELEASE" :scope "test"]
+   [adzerk/boot-cljs "2.1.2"]
+   [doo "0.1.7"]
+   [crisptrutski/boot-cljs-test "0.3.3" :scope "test"]
+   [adzerk/boot-test "1.1.1" :scope "test"]
+   [hoplon "7.1.0-SNAPSHOT"]
+   [samestep/boot-refresh "0.1.0" :scope "test"]
 
-                 ; Other util libs
-                 [medley "1.0.0"]
-                 [binaryage/oops "0.5.6"]
-                 [com.taoensso/timbre "4.10.0"]
+   ; Other util libs
+   [medley "1.0.0"]
+   [binaryage/oops "0.5.6"]
+   [com.taoensso/timbre "4.10.0"]
+   [com.gfredericks/test.chuck "0.2.8"]
 
-                 ; Math
-                 [thedavidmeister/xoroshiro128 "1.0.2"]
+   ; Math
+   [thedavidmeister/xoroshiro128 "1.0.2"]
 
-                 ; Strings
-                 [funcool/cuerdas "2.0.3"]
-                 [cheshire "5.8.0"]
+   ; Strings
+   [funcool/cuerdas "2.0.3"]
+   [cheshire "5.8.0"]
 
-                 ; Data validation
-                 [prismatic/schema "1.1.6"]
+   ; Data validation
+   [prismatic/schema "1.1.6"]
 
-                 ; Routing
-                 [bidi "2.1.1"]
+   ; Routing
+   [bidi "2.1.1"]
 
-                 ; Data
-                 [datascript "0.16.1"]
+   ; Data
+   [datascript "0.16.1"]
 
-                 ; CLJSJS
-                 [cljsjs/resize-observer-polyfill "1.4.2-0"]])
+   ; CLJSJS
+   [cljsjs/resize-observer-polyfill "1.4.2-0"]])
 
 (task-options!
  pom {:project     project
@@ -49,13 +52,26 @@
   []
   (comp (pom) (jar) (install)))
 
-(require '[crisptrutski.boot-cljs-test :refer [test-cljs]]
-         '[adzerk.bootlaces :refer :all]
-         '[adzerk.boot-test :refer [test]])
+(require
+ '[crisptrutski.boot-cljs-test :refer [test-cljs]]
+ '[adzerk.bootlaces :refer :all]
+ '[adzerk.boot-test :refer [test]]
+ '[samestep.boot-refresh :refer [refresh]])
 
 (bootlaces! version)
 
 (def cljs-compiler-options {})
+
+(deftask repl-server
+ []
+ (comp
+  (watch)
+  (refresh)
+  (repl :server true)))
+
+(deftask repl-client
+ []
+ (repl :client true))
 
 (deftask tests-cljs
   "Run all the CLJS tests"
