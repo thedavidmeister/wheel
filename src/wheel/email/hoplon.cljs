@@ -5,6 +5,7 @@
   [clojure.spec.alpha :as spec]
   wheel.email.spec
   wheel.dom.traversal
+  wheel.test.util
   [cljs.test :refer-macros [deftest is]]))
 
 (h/defelem email
@@ -42,7 +43,7 @@
   (is (= @c (wheel.dom.traversal/text el)))))
 
 (deftest ??email--invalid
- (let [valid "foo@example.com"
+ (let [valid (wheel.test.util/fake :wheel.email/email)
        invalid "foo"
        a (j/cell valid)
        el (email
