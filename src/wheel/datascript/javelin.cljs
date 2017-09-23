@@ -1,8 +1,10 @@
 ; Datascript/Javelin interop.
 (ns wheel.datascript.javelin
  (:require
+  datascript.spec
   [datascript.core :as d]
   [javelin.core :as j]
+  [clojure.spec.alpha :as spec]
   [cljs.test :refer-macros [deftest is]]))
 
 (defn conn-cell? [c]
@@ -59,7 +61,7 @@
        conn (conn-cell)]
   (d/listen! conn ::foo (partial reset! c))
   (d/transact! conn [{:foo :bar}])
-  (is (d/tx-report? @c))
+  (is (spec/valid? :wheel.datascript/tx-report @c))
   (is (= @conn (:db-after @c)))))
 
 (deftest ??conn-cell-with
