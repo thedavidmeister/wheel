@@ -4,4 +4,4 @@
   [clojure.spec.alpha :as spec]))
 
 (spec/def :wheel.datascript/tx-report
- #(instance? datascript.db/TxReport %))
+ #(instance? datascript.db.TxReport %))
