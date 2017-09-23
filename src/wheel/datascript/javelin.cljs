@@ -1,16 +1,16 @@
 ; Datascript/Javelin interop.
 (ns wheel.datascript.javelin
  (:require
+  wheel.datascript.spec
   [datascript.core :as d]
   [javelin.core :as j]
+  [clojure.spec.alpha :as spec]
   [cljs.test :refer-macros [deftest is]]))
 
 (defn conn-cell? [c]
  (and
   (d/conn? c)
-  (j/cell? c)
-  (d/db? @c)
-  (:listeners (meta c))))
+  (j/cell? c)))
 
 (defn- conn-cell-from-db
  "Mimics datascript conn-from-db but builds a compatible javelin cell"
@@ -44,16 +44,25 @@
 
 (deftest ??conn-cell?
  (is (not (conn-cell? (j/cell nil))))
- (is (not (conn-cell? (j/cell (d/empty-db {})))))
  (is (not (conn-cell? (d/empty-db))))
  (is (not (conn-cell? (d/create-conn {}))))
+
+ (is (conn-cell? (j/cell (d/empty-db {}))))
  (is (conn-cell? (conn-cell))))
 
 (deftest ??conn-cell
- "Test that we can create a conn as a javelin cell"
+ ; create a conn as a javelin cell
  (let [conn (conn-cell)]
   ; Smoke test a very basic query for exceptions.
-  (is (= #{} (d/q '[:find ?id :where [?id :data _]] @conn)))))
+  (is (= #{} (d/q '[:find ?id :where [?id :data _]] @conn))))
+
+ ; add a listener
+ (let [c (j/cell nil)
+       conn (conn-cell)]
+  (d/listen! conn ::foo (partial reset! c))
+  (d/transact! conn [{:foo :bar}])
+  (is (spec/valid? :wheel.datascript/tx-report @c))
+  (is (= @conn (:db-after @c)))))
 
 (deftest ??conn-cell-with
  "Test that we can return a conn cell with tx applied"
