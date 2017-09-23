@@ -1,4 +1,4 @@
-(ns datascript.spec
+(ns wheel.datascript.spec
  (:require
   datascript.db
   [clojure.spec.alpha :as spec]))

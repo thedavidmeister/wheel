@@ -1,7 +1,7 @@
 ; Datascript/Javelin interop.
 (ns wheel.datascript.javelin
  (:require
-  datascript.spec
+  wheel.datascript.spec
   [datascript.core :as d]
   [javelin.core :as j]
   [clojure.spec.alpha :as spec]
