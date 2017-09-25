@@ -21,15 +21,15 @@
 
 (defn font->css-str
  "Given a font map, returns a CSS string, including the fallback"
- [font]
+ [f]
  {:post [(string? %)]}
- (str "font-family: " (font->family-str font) ";"))
+ (str "font-family: " (font->family-str f) ";"))
 
 (defn font->css-map
  "Given a font map, returns a Hoplon CSS map, including the fallback"
- [font]
+ [f]
  {:post [(map? %)]}
- {:font-family (font->family-str font)})
+ {:font-family (font->family-str f)})
 
 ; TESTS
 
