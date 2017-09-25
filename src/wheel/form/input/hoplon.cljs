@@ -9,4 +9,4 @@
 ; TESTS
 
 (deftest ??input
- (is (wheel.dom.traversal/is (input) "input")))
+ (is (wheel.dom.traversal/is? (input) "input")))
