@@ -3,7 +3,7 @@
   [hoplon.core :as h]
   [javelin.core :as j]
   zxcvbn.lib
-  form.hoplon
+  wheel.form.input.hoplon
   wheel.dom.traversal
   [cljs.test :refer-macros [deftest is are]]))
 
@@ -44,7 +44,7 @@
  [attributes children]
  (let [mask-password? (j/cell true)
        attributes (merge {:value (j/cell "") :label "Password:"} attributes)]
-  (form.hoplon/input
+  (wheel.form.input.hoplon/input
    :name "password"
    :type (j/cell= (if mask-password? "password" "text"))
    (dissoc attributes :user-inputs)
