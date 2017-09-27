@@ -1,4 +1,4 @@
-(ns password.hoplon
+(ns wheel.password.hoplon
  (:require
   [hoplon.core :as h]
   [javelin.core :as j]
