@@ -13,23 +13,23 @@
 
 (defn font->family-str
  "Given a font map, returns a CSS font family string, including the fallback"
- [font]
- {:pre [(spec/valid? :wheel.font/font font)]}
- (let [name (:wheel.font/name font)
-       fallback (or (:wheel.font/fallback font) (get-fallback))]
-  (str "\"" name "\", " fallback)))
+ [f]
+ {:pre [(spec/valid? :wheel.font/font f)]}
+ (let [n (:wheel.font/name f)
+       fallback (or (:wheel.font/fallback f) (get-fallback))]
+  (str "\"" n "\", " fallback)))
 
 (defn font->css-str
  "Given a font map, returns a CSS string, including the fallback"
- [font]
+ [f]
  {:post [(string? %)]}
- (str "font-family: " (font->family-str font) ";"))
+ (str "font-family: " (font->family-str f) ";"))
 
 (defn font->css-map
  "Given a font map, returns a Hoplon CSS map, including the fallback"
- [font]
+ [f]
  {:post [(map? %)]}
- {:font-family (font->family-str font)})
+ {:font-family (font->family-str f)})
 
 ; TESTS
 
