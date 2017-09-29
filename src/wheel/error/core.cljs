@@ -1,4 +1,4 @@
-(ns error.core
+(ns wheel.error.core
  (:require
   [hoplon.core :as h]
   taoensso.timbre
