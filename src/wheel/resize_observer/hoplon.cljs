@@ -29,17 +29,22 @@
                       (reset! width (.-width rect))
                       (reset! height (.-height rect))))))]
   (.observe (js/ResizeObserver. cb) el)
-  el))
+  ; for the resize observer to reliably measure its children there must be an
+  ; immediate parent with height auto.
+  ; https://stackoverflow.com/questions/19375715/parent-div-not-expanding-to-childrens-height
+  ; example showing a flex parent breaking child measurements.
+  ; https://codepen.io/anon/pen/veRKOy?editors=1111
+  (h/div el)))
 
 (def div (partial el :f h/div))
 
 ; TESTS
 
 (deftest ??el
- (is (wheel.dom.traversal/is? (el) "div"))
- (is (wheel.dom.traversal/is? (el :f h/span) "span"))
- (is (wheel.dom.traversal/is? (el :f svg/svg) "svg"))
- (is (wheel.dom.traversal/is? (el :f svg/g) "g")))
+ (is (wheel.dom.traversal/contains? (el) "div"))
+ (is (wheel.dom.traversal/contains? (el :f h/span) "span"))
+ (is (wheel.dom.traversal/contains? (el :f svg/svg) "svg"))
+ (is (wheel.dom.traversal/contains? (el :f svg/g) "g")))
 
 (deftest ??div
  (async done

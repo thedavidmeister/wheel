@@ -4,13 +4,13 @@
 (set-env!
  :source-paths #{"src"}
  :dependencies
- '[[org.clojure/clojure "1.9.0-alpha19"]
-   [org.clojure/clojurescript "1.9.908"]
+ '[[org.clojure/clojure "1.9.0-beta1"]
+   [org.clojure/clojurescript "1.9.946"]
    [adzerk/boot-test "RELEASE" :scope "test"]
    [adzerk/bootlaces "RELEASE" :scope "test"]
-   [adzerk/boot-cljs "2.1.2"]
-   [doo "0.1.7"]
-   [crisptrutski/boot-cljs-test "0.3.3" :scope "test"]
+   [adzerk/boot-cljs "2.1.4"]
+   [doo "0.1.8"]
+   [crisptrutski/boot-cljs-test "0.3.5-SNAPSHOT" :scope "test"]
    [adzerk/boot-test "1.1.1" :scope "test"]
    [hoplon "7.1.0-SNAPSHOT"]
    [samestep/boot-refresh "0.1.0" :scope "test"]
