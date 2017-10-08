@@ -25,7 +25,7 @@
    [thedavidmeister/xoroshiro128 "1.0.2"]
 
    ; Strings
-   [funcool/cuerdas "2.0.3"]
+   [funcool/cuerdas "2.0.4"]
    [cheshire "5.8.0"]
 
    ; Data validation
