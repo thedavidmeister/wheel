@@ -29,7 +29,12 @@
                       (reset! width (.-width rect))
                       (reset! height (.-height rect))))))]
   (.observe (js/ResizeObserver. cb) el)
-  el))
+  ; for the resize observer to reliably measure its children there must be an
+  ; immediate parent with height auto.
+  ; https://stackoverflow.com/questions/19375715/parent-div-not-expanding-to-childrens-height
+  (h/div
+   :css {:height "auto"}
+   el)))
 
 (def div (partial el :f h/div))
 
