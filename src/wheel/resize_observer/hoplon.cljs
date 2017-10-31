@@ -42,6 +42,11 @@
 
 ; TESTS
 
+(deftest ??el--f
+ (let [f h/span
+       el (wheel.resize-observer.hoplon/el "foo" :f f)]
+  (is (wheel.dom.traversal/is? el "span"))))
+
 (deftest ??el
  (is (wheel.dom.traversal/contains? (el) "div"))
  (is (wheel.dom.traversal/contains? (el :f h/span) "span"))
