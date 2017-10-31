@@ -11,8 +11,8 @@
 
 (h/defelem el
  [{:keys [width height f] :as attributes} children]
- (let [f (or f h/div)
-       el (f
+ (let [f' (or f h/div)
+       el (f'
            (dissoc attributes :width :height)
            children
            (wheel.clearfix.hoplon/clearfix))
@@ -34,7 +34,9 @@
   ; https://stackoverflow.com/questions/19375715/parent-div-not-expanding-to-childrens-height
   ; example showing a flex parent breaking child measurements.
   ; https://codepen.io/anon/pen/veRKOy?editors=1111
-  (h/div el)))
+  ; we don't wrap el if f is provided as divs can break svg, etc.
+  ; any wrappers become the responsibility of f.
+  (if f el (h/div el))))
 
 (def div (partial el :f h/div))
 
@@ -42,9 +44,10 @@
 
 (deftest ??el
  (is (wheel.dom.traversal/contains? (el) "div"))
- (is (wheel.dom.traversal/contains? (el :f h/span) "span"))
- (is (wheel.dom.traversal/contains? (el :f svg/svg) "svg"))
- (is (wheel.dom.traversal/contains? (el :f svg/g) "g")))
+ (is (wheel.dom.traversal/is? (el) "div"))
+ (is (wheel.dom.traversal/is? (el :f h/span) "span"))
+ (is (wheel.dom.traversal/is? (el :f svg/svg) "svg"))
+ (is (wheel.dom.traversal/is? (el :f svg/g) "g")))
 
 (deftest ??div
  (async done
