@@ -22,7 +22,8 @@
    [com.gfredericks/test.chuck "0.2.8"]
 
    ; Math
-   [thedavidmeister/xoroshiro128 "1.0.2"]
+   [thedavidmeister/cljc-long "1.0.0-SNAPSHOT"]
+   [thedavidmeister/xoroshiro128 "1.1.2"]
 
    ; Strings
    [funcool/cuerdas "2.0.4"]

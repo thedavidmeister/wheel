@@ -1,5 +1,6 @@
 (ns wheel.math.random
  (:require
+  cljc-long.core
   xoroshiro128.core
   medley.core
   wheel.math.distribution.triangular
@@ -17,12 +18,11 @@
     (xoroshiro128.core/xoroshiro128+ seed)))))
 
 (defn rand-seq->0:1
-  "Maps a sequence of uniformly distributed longs to uniformly distributed floats in the interval [0, 1]."
-  [rands]
-  {:pre [(sequential? rands)]
-   :post [(sequential? %)]}
-  (let [long->1 (fn [l] (Math/abs (/ (double l) (double Long/MAX_VALUE))))]
-   (map long->1 rands)))
+ "Maps a sequence of uniformly distributed longs to uniformly distributed floats in the interval [0, 1]."
+ [rands]
+ {:pre [(sequential? rands)]
+  :post [(sequential? %)]}
+ (map xoroshiro128.core/long->unit-float rands))
 
 (defn rand-seq->triangular
  "Maps a sequence of uniformly distributed longs to triangularly distributed floats around min, max and mode."
@@ -37,20 +37,34 @@
 
 (def sample-size 1000)
 
+; xoroshiro128.test.util/longs-equal?
+(defn longs-equal?
+ ([s-1 s-2] (longs-equal? s-1 s-2 true))
+ ([s-1 s-2 e]
+  (doall
+   (map
+    #(is (= e (cljc-long.core/= %1 %2)))
+    (map cljc-long.core/long s-1)
+    (map cljc-long.core/long s-2)))))
+
 (deftest ??rand-seq--seed
  ; Using the same seed should produce the same sequence.
  ; Using a different seed should produce a different sequence.
  (let [seed-1 (medley.core/random-uuid)
        seed-2 (medley.core/random-uuid)]
 
-  (is (= (take sample-size (rand-seq seed-1))
-         (take sample-size (rand-seq seed-1))))
+  (longs-equal?
+   (take sample-size (rand-seq seed-1))
+   (take sample-size (rand-seq seed-1)))
 
-  (is (= (take sample-size (rand-seq seed-2))
-         (take sample-size (rand-seq seed-2))))
+  (longs-equal?
+   (take sample-size (rand-seq seed-2))
+   (take sample-size (rand-seq seed-2)))
 
-  (is (not (= (take sample-size (rand-seq seed-1))
-              (take sample-size (rand-seq seed-2)))))))
+  (longs-equal?
+   (take sample-size (rand-seq seed-1))
+   (take sample-size (rand-seq seed-2))
+   false)))
 
 (deftest ??rand-seq->0:1--bounds
  (let [rands (rand-seq)
