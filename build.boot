@@ -4,7 +4,7 @@
 (set-env!
  :source-paths #{"src"}
  :dependencies
- '[[org.clojure/clojure "1.9.0-beta1"]
+ '[[org.clojure/clojure "1.9.0-RC2"]
    [org.clojure/clojurescript "1.9.946"]
    [adzerk/boot-test "RELEASE" :scope "test"]
    [adzerk/bootlaces "RELEASE" :scope "test"]
@@ -22,8 +22,8 @@
    [com.gfredericks/test.chuck "0.2.8"]
 
    ; Math
-   [thedavidmeister/cljc-long "1.0.0-SNAPSHOT"]
-   [thedavidmeister/xoroshiro128 "1.1.2"]
+   [thedavidmeister/cljc-long "1.1"]
+   [thedavidmeister/xoroshiro128 "1.1.3"]
 
    ; Strings
    [funcool/cuerdas "2.0.4"]

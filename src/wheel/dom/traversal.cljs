@@ -116,7 +116,7 @@
  "Use jQuery to trigger the given event on the first match of sel"
  [el sel e]
  (let [target (-> el (find sel) first)]
-  (assert target)
+  (assert target (str "Cannot find target " sel " in " el " to trigger " e))
   (wheel.dom.events/trigger-jq! target e)))
 
 ; TESTS
