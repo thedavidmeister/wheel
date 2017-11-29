@@ -6,7 +6,8 @@
 (def pi #?(:clj Math/PI
            :cljs (.-PI js/Math)))
 
-(def turn (* pi 2))
+; https://tauday.com/tau-manifesto
+(def tau (* pi 2))
 
 (def nan ((fn [] #?(:clj Double/NaN :cljs js/NaN))))
 
