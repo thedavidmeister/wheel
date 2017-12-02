@@ -63,6 +63,12 @@
 
 (def cljs-compiler-options {})
 
+(deftask deploy
+ []
+ (comp
+  (build-jar)
+  (push-release)))
+
 (deftask repl-server
  []
  (comp
