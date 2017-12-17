@@ -26,6 +26,18 @@
  (if-let [original-event (aget e "originalEvent")]
   (aget original-event k)))
 
+(defn stop-propagation
+ "compable stopPropagation event handler"
+ [event]
+ (.stopPropagation event)
+ event)
+
+(defn prevent-default
+ "compable preventDefault event handler"
+ [event]
+ (.preventDefault event)
+ event)
+
 (defn make-bubblable! [el]
  (wheel.dom.manipulation/document-append! el))
 
