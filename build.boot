@@ -4,7 +4,7 @@
 (set-env!
  :source-paths #{"src"}
  :dependencies
- '[[org.clojure/clojure "1.9.0-RC2"]
+ '[[org.clojure/clojure "1.9.0"]
    [org.clojure/clojurescript "1.9.946"]
    [adzerk/boot-test "RELEASE" :scope "test"]
    [adzerk/bootlaces "RELEASE" :scope "test"]
