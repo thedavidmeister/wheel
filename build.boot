@@ -20,6 +20,7 @@
    [binaryage/oops "0.5.6"]
    [com.taoensso/timbre "4.10.0"]
    [com.gfredericks/test.chuck "0.2.8"]
+   [environ "1.1.0"]
 
    ; Math
    [thedavidmeister/cljc-long "1.1"]
