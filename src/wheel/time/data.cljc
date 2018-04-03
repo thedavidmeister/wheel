@@ -2,7 +2,7 @@
  (:require
   [clojure.test :refer [deftest is]]
   [clojure.spec.alpha :as spec]
-  test.generators
+  wheel.test.generators
   wheel.test.util
   time.spec
   #?(:cljs cljs-time.extend)
