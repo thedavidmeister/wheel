@@ -10,13 +10,17 @@
 
 (h/defelem email
  [{:keys [address subject body]} children]
- (let [children (if (seq children) children address)]
+ (let [children (if (seq children) children address)
+       href (j/formula-of [address subject body]
+             (str "mailto:" address "?subject=" subject "&body=" body))
+       invalid-address? (j/formula-of [address]
+                         (not (spec/valid? :wheel.email/email address)))]
   (h/a
-   :href (j/cell= (str "mailto:" address "?subject=" subject "&body=" body))
+   :href href
    :class #{"email"}
    :css {:display "inline-block"}
    :target "_blank"
-   :data-invalid-address (j/cell= (not (spec/valid? :wheel.email/email address)))
+   :data-invalid-address invalid-address?
    children)))
 
 ; TESTS
