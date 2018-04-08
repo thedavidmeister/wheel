@@ -1,4 +1,4 @@
-(ns device.size
+(ns wheel.device.size
  (:require
   [javelin.core :as j]
   [hoplon.core :as h]))
