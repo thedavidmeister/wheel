@@ -1,5 +1,5 @@
 (def project 'thedavidmeister/wheel)
-(def version "0.3.3")
+(def version "0.3.4")
 
 (set-env!
  :source-paths #{"src"}
