@@ -12,6 +12,8 @@
  []
  (let [c (j/cell (dimensions js/window))]
   (j/with-let [_ (j/cell= c)]
-   (js/window
-    :resize #(reset! c (dimensions js/window))))))
+   (.addEventListener
+    js/window
+    "resize"
+    #(reset! c (dimensions js/window))))))
 (def window-size-cell (memoize -window-size-cell))
