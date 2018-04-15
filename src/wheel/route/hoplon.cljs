@@ -23,12 +23,16 @@
                         params))
        bidi= (j/cell= (wheel.route.core/path->bidi history routes fallback))
        current-handler? (j/cell= (= handler (:handler bidi=)))
-       current-params? (j/cell= (= params (or (:route-params bidi=) {})))]
+       current-params? (j/cell= (= params (or (:route-params bidi=) {})))
+       go! (fn [e]
+            (wheel.dom.events/prevent-default e)
+            (if @params
+             (wheel.route.core/navigate! history routes handler params)
+             (wheel.route.core/handler! history routes handler)))]
   (h/a
    :class "route-link"
-   :click #(if @params
-            (wheel.route.core/navigate! history routes handler params)
-            (wheel.route.core/handler! history routes handler))
+   :click go!
+   :mousedown go!
    :data-current (j/cell=
                   (seq
                    (remove nil? [(when current-handler? "handler")
