@@ -57,11 +57,14 @@
  '[crisptrutski.boot-cljs-test :refer [test-cljs]]
  '[adzerk.bootlaces :refer :all]
  '[adzerk.boot-test :refer [test]]
- '[samestep.boot-refresh :refer [refresh]])
+ '[samestep.boot-refresh :refer [refresh]]
+ 'wheel.password.build)
 
 (bootlaces! version)
 
-(def cljs-compiler-options {})
+(def cljs-compiler-options
+ (-> {}
+  wheel.password.build/with-cljs-compiler-options))
 
 (deftask deploy
  []
